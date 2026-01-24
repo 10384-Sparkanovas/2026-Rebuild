@@ -25,17 +25,29 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-
+import frc.robot.generated.Constants;
 import frc.robot.generated.TunerConstantsSwerve.TunerSwerveDrivetrain;
 
 
 public class Intake extends SubsystemBase{
 
-    CANBus kCANBus = CANBus.roboRIO();
-    private final TalonFX intakeMotor;
-    private final TalonFX pivotMotor; 
-    private final TalonFXConfiguration intakeMotorConfiguration;
-    private final TalonFXConfiguration pivotMotorConfiguration;
+    private final TalonFX intakeMotor = new TalonFX(9,Constants.canivore);
+
+    public Intake() {
+        final TalonFXConfiguration intakeMotorConfiguration;
+        //final TalonFXConfiguration pivotMotorConfiguration;
+  
+    }
+
+    public void intakeFuel(){
+        intakeMotor.set(1);
+    }
+    
+    public void exhaustFuel(){
+        intakeMotor.set(-1);
+    }
+    
+    //private final TalonFX pivotMotor; 
 
     
 }
