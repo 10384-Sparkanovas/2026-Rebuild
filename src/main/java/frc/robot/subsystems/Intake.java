@@ -31,23 +31,21 @@ import frc.robot.generated.TunerConstantsSwerve.TunerSwerveDrivetrain;
 
 public class Intake extends SubsystemBase{
 
-    private final TalonFX intakeMotor = new TalonFX(9,Constants.canivore);
+    private TalonFX intakeMotor;
 
-    public Intake() {
-        final TalonFXConfiguration intakeMotorConfiguration;
-        //final TalonFXConfiguration pivotMotorConfiguration;
-  
+    public Intake(TalonFX intakeMotor) {
+        this.intakeMotor = intakeMotor;
     }
 
-    public void intakeFuel(){
-        intakeMotor.set(1);
+    public void intakeFuel(double speed){
+        intakeMotor.set(speed);
     }
     
-    public void exhaustFuel(){
-        intakeMotor.set(-1);
+    public void exhaustFuel(double speed){
+        intakeMotor.set(speed);
     }
     
-    //private final TalonFX pivotMotor; 
+     
 
     
 }

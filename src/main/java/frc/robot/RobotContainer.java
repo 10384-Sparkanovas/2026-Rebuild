@@ -7,18 +7,21 @@ package frc.robot;
 import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-
+import frc.robot.generated.Constants;
 import frc.robot.generated.TunerConstantsSwerve;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.MotorTest;
 
 public class RobotContainer {
     private double MaxSpeed = TunerConstantsSwerve.kSpeedAt12Volts.in(MetersPerSecond) * 0.4; // kSpeedAt12Volts desired
@@ -36,12 +39,20 @@ public class RobotContainer {
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
-    private final CommandXboxController driveJoystick = new CommandXboxController(0);
-    private final CommandXboxController operatorJoystick = new CommandXboxController(1);
+    private final CommandXboxController driveJoystick = new CommandXboxController(Constants.nonDriverConstants.driverID);
+    private final CommandXboxController operatorJoystick = new CommandXboxController(Constants.nonDriverConstants.operatorID);
+
+    //Object declerations
+    private final TalonFX intakeMotor = new TalonFX(Constants.nonDriverConstants.intakeID, Constants.nonDriverConstants.canivore);
+    private  TalonFX motor1;
+    private  TalonFX motor2;
 
     // Subsystems
     public final CommandSwerveDrivetrain drivetrain = TunerConstantsSwerve.createDrivetrain();
-    public final Intake intake = new Intake();
+    public final MotorTest motorTest = new MotorTest(motor1, motor2);
+    
+    
+    public final Intake intake = new Intake(intakeMotor);
 
     public RobotContainer() {
         configureDriveBindings();
@@ -51,11 +62,15 @@ public class RobotContainer {
     private void configureOperatorBindings() {
         //operatorJoystick.b().whileTrue(Commands.run(intake::intakeFuel, intake));
         operatorJoystick.b().whileTrue(Commands.run(() -> {
-            intake.intakeFuel();
+            intake.intakeFuel(1);
         }, intake));
+
+        operatorJoystick.leftBumper().whileTrue(Commands.run(() -> {
+            motorTest.runMotor(0.6);
+        }));
          
         operatorJoystick.a().whileTrue(Commands.run(() -> {
-            intake.exhaustFuel();
+            intake.exhaustFuel(1);
         }, intake));
     }
 
