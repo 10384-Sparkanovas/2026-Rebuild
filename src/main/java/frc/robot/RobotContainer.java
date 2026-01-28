@@ -11,6 +11,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -43,7 +44,7 @@ public class RobotContainer {
     private final CommandXboxController operatorJoystick = new CommandXboxController(Constants.nonDriverConstants.operatorID);
 
     //Object declerations
-    private final TalonFX intakeMotor = new TalonFX(Constants.nonDriverConstants.intakeID, Constants.nonDriverConstants.canivore);
+    private  Spark intakeMotor = new Spark(Constants.nonDriverConstants.intakeID);
     private  TalonFX motor1;
     private  TalonFX motor2;
 
