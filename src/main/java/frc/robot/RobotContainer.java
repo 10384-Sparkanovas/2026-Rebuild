@@ -8,13 +8,15 @@ import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.sim.TalonFXSimState.MotorType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
+import com.revrobotics.spark.SparkFlex;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -23,6 +25,7 @@ import frc.robot.generated.TunerConstantsSwerve;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.MotorTest;
+import frc.robot.subsystems.HingeMotor;
 
 public class RobotContainer {
     private double MaxSpeed = TunerConstantsSwerve.kSpeedAt12Volts.in(MetersPerSecond) * 0.4; // kSpeedAt12Volts desired
@@ -44,8 +47,8 @@ public class RobotContainer {
     private final CommandXboxController operatorJoystick = new CommandXboxController(Constants.nonDriverConstants.operatorID);
 
     //Object declerations
-    private  Spark intakeMotor = new Spark(Constants.nonDriverConstants.intakeID);
-    private  TalonFX motor1;
+    private  SparkFlex intakeMotor = new SparkFlex(Constants.nonDriverConstants.intakeID, com.revrobotics.spark.SparkLowLevel.MotorType.kBrushless);
+    private  TalonFX motor1; 
     private  TalonFX motor2;
 
     // Subsystems
@@ -55,6 +58,8 @@ public class RobotContainer {
     
     public final Intake intake = new Intake(intakeMotor);
 
+    public final HingeMotor hinge = new HingeMotor();
+
     public RobotContainer() {
         configureDriveBindings();
         configureOperatorBindings();
@@ -63,16 +68,21 @@ public class RobotContainer {
     private void configureOperatorBindings() {
         //operatorJoystick.b().whileTrue(Commands.run(intake::intakeFuel, intake));
         operatorJoystick.b().whileTrue(Commands.run(() -> {
-            intake.intakeFuel(1);
+            intake.intakeFuel(0.25);
         }, intake));
 
-        operatorJoystick.leftBumper().whileTrue(Commands.run(() -> {
-            motorTest.runMotor(0.6);
-        }));
+        
+        operatorJoystick.povDown().onTrue(Commands.run(() -> {
+            hinge.down(0);
+        }, hinge));
+        operatorJoystick.povUp().onTrue(Commands.run(() -> {
+            hinge.down(0.25);
+        }, hinge));
+       
          
-        operatorJoystick.a().whileTrue(Commands.run(() -> {
-            intake.exhaustFuel(1);
-        }, intake));
+        //  operatorJoystick.a().whileTrue(Commands.run(() -> {
+        //     intake.exhaustFuel(1);
+        // }, intake));
     }
 
 

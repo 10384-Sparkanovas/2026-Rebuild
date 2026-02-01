@@ -6,11 +6,7 @@ import java.util.function.Supplier;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
-import com.ctre.phoenix6.swerve.SwerveModuleConstants;
-import com.ctre.phoenix6.swerve.SwerveRequest;
+
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -20,6 +16,7 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
+import com.revrobotics.spark.SparkFlex;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -32,9 +29,9 @@ import frc.robot.generated.TunerConstantsSwerve.TunerSwerveDrivetrain;
 
 public class Intake extends SubsystemBase{
 
-    private Spark intakeMotor;
+    private SparkFlex intakeMotor;
 
-    public Intake(Spark intakeMotor) {
+    public Intake(SparkFlex intakeMotor) {
         this.intakeMotor = intakeMotor;
     }
 
@@ -42,9 +39,9 @@ public class Intake extends SubsystemBase{
         intakeMotor.set(speed);
     }
     
-    public void exhaustFuel(double speed){
-        intakeMotor.set(speed);
-    }
+    // public void exhaustFuel(double speed){
+    //     intakeMotor.set(speed);
+    // }
     
      
 
