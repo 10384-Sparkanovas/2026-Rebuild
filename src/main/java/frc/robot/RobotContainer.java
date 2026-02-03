@@ -70,16 +70,15 @@ public class RobotContainer {
         operatorJoystick.b().whileTrue(Commands.run(() -> {
             intake.intakeFuel(0.25);
         }, intake));
-         operatorJoystick.x().whileTrue(Commands.run(() -> {
+        operatorJoystick.x().whileTrue(Commands.run(() -> {
             intake.exhaustFuel(-0.25);
         }, intake));
-         operatorJoystick.b().whileFalse(Commands.run(() -> {
+        operatorJoystick.b().whileFalse(Commands.run(() -> {
             intake.stopMotor(0);
         }, intake));
-         operatorJoystick.x().whileFalse(Commands.run(() -> {
+        operatorJoystick.x().whileFalse(Commands.run(() -> {
             intake.stopMotor(0);
         }, intake));
-
 
         
         operatorJoystick.povDown().onTrue(Commands.run(() -> {

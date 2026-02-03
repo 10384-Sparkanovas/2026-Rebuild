@@ -42,7 +42,7 @@ public class Intake extends SubsystemBase{
     public void exhaustFuel(double speed){
         intakeMotor.set(speed);
     }
-    public void stopMotor(double speed){
+    public void stopMotor (double speed){
         intakeMotor.set(speed);
     }
     
