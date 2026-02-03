@@ -9,6 +9,7 @@ public class Constants {
     
     public static final class nonDriverConstants{
         public static final int intakeID = 17;
+       
         public static final CANBus canivore = new CANBus("put name here");
         public static final int operatorID = 0;
         public static final int driverID = 1;
@@ -34,6 +35,14 @@ public class Constants {
         public static final int encoderID = 20; 
         
 
+    }
+    public static final class ShooterConstants{
+        public static final int shooterID = 20;
+        public static final double kS = 0;
+        public static final double kV = 0;
+        public static final double kP = 0;
+        public static final double kI = 0;
+        public static final double kD = 0;
     }
 
     
