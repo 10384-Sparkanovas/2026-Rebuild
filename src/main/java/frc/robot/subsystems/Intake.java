@@ -29,15 +29,15 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 // import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 // import frc.robot.generated.Constants;
 // import frc.robot.generated.TunerConstantsSwerve.TunerSwerveDrivetrain;
-
+import frc.robot.generated.Constants.nonDriverConstants;;
 
 public class Intake extends SubsystemBase{
 
-    private SparkFlex intakeMotor;
+    private  final SparkFlex intakeMotor = new SparkFlex(nonDriverConstants.intakeID, com.revrobotics.spark.SparkLowLevel.MotorType.kBrushless);
    // private TalonFX indexMotor;
 
-    public Intake(SparkFlex intakeMotor, TalonFX indexMotor) {
-        this.intakeMotor = intakeMotor;
+    public Intake() {
+        //this.intakeMotor = intakeMotor;
        
     }
 

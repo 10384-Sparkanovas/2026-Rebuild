@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import frc.robot.Command.ShooterFeederCommand;
+//import frc.robot.Command.ShooterFeederCommand;
 import frc.robot.generated.Constants;
 import frc.robot.generated.TunerConstantsSwerve;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -52,10 +52,10 @@ public class RobotContainer {
     private final CommandXboxController operatorJoystick = new CommandXboxController(Constants.nonDriverConstants.operatorID);
 
     //Object declerations
-    private  SparkFlex intakeMotor = new SparkFlex(Constants.nonDriverConstants.intakeID, com.revrobotics.spark.SparkLowLevel.MotorType.kBrushless);
+    //private  SparkFlex intakeMotor = new SparkFlex(Constants.nonDriverConstants.intakeID, com.revrobotics.spark.SparkLowLevel.MotorType.kBrushless);
     private  TalonFX motor1; 
     private  TalonFX motor2;
-    private TalonFX feederMotor = new TalonFX(Constants.feederConstants.feederID, Constants.nonDriverConstants.canivore);
+    //private TalonFX feederMotor = new TalonFX(Constants.feederConstants.feederID, Constants.nonDriverConstants.canivore);
     private TalonFX indexMotor = new TalonFX(Constants.nonDriverConstants.indexMotorID,Constants.nonDriverConstants.canivore);
    // private TalonFX shooterMotor = new TalonFX(Constants.ShooterConstants.shooterID, Constants.nonDriverConstants.canivore);
     //private TalonFX feederShooter = new TalonFX(Constants.feederConstants.feederID, Constants.nonDriverConstants.canivore);
@@ -64,11 +64,11 @@ public class RobotContainer {
     public final CommandSwerveDrivetrain drivetrain = TunerConstantsSwerve.createDrivetrain();
     public final MotorTest motorTest = new MotorTest(motor1, motor2);
     public final Shooter shooterSubsystem = new Shooter();
-    public final FeederSubystem feederSubsystem = new FeederSubystem(feederMotor);
+    public final FeederSubystem feederSubsystem = new FeederSubystem();
 
     //Command 
-    public final ShooterFeederCommand shooterFeederCmd = new ShooterFeederCommand(feederSubsystem, shooterSubsystem, feederMotor);
-    public final Intake intake = new Intake(intakeMotor, indexMotor);
+    //public final ShooterFeederCommand shooterFeederCmd = new ShooterFeederCommand(feederSubsystem, shooterSubsystem, feederMotor);
+    public final Intake intake = new Intake();
     
     //public final Shooter shooter = new Shooter()
 
@@ -98,13 +98,27 @@ public class RobotContainer {
    
         
         //Shooter bindings
-        operatorJoystick.y().whileTrue(Commands.run(() -> {feederSubsystem.runMotor(60);
+        operatorJoystick.y().whileTrue(Commands.run(() -> {feederSubsystem.runAtVelocity(30);
+
                                                             //shooterSubsystem.runAtVelocity(40);
                                                             
                                                 })); 
+     operatorJoystick.povRight().whileTrue(Commands.run(() -> {feederSubsystem.runAtVelocity(60);
+            
+                                                            //shooterSubsystem.runAtVelocity(40);
+                                                            
+                                                }));
+     operatorJoystick.povRight().whileFalse(Commands.run(() -> {feederSubsystem.stop();
+            
+                                                            //shooterSubsystem.runAtVelocity(40);
+                                                            
+                                                }));
                                                 //this joystick binding will be changed later
-        operatorJoystick.a().whileTrue(Commands.run(() -> {shooterSubsystem.runAtVelocity(50);}));
+        operatorJoystick.a().whileTrue(Commands.run(() -> {shooterSubsystem.runAtVelocity(65); feederSubsystem.runAtVelocity(30);}));
         
+
+        operatorJoystick.a().whileTrue(Commands.run(() -> {shooterSubsystem.runAtVelocity(65); feederSubsystem.runAtVelocity(30);}));
+
         operatorJoystick.y().whileFalse(Commands.run(() -> {feederSubsystem.stop(); shooterSubsystem.stop();}));
 
         
@@ -130,10 +144,10 @@ public class RobotContainer {
         // and Y is defined as to the left according to WPILib convention.
         drivetrain.setDefaultCommand(
                 // Drivetrain will execute this command periodically
-                drivetrain.applyRequest(() -> drive.withVelocityX(-driveJoystick.getLeftY() * MaxSpeed) // Drive forward
+                drivetrain.applyRequest(() -> drive.withVelocityX(-driveJoystick.getLeftY() * MaxSpeed ) // Drive forward
                                                                                                         // with negative
                                                                                                         // Y (forward)
-                        .withVelocityY(-driveJoystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                        .withVelocityY(-driveJoystick.getLeftX() * MaxSpeed ) // Drive left with negative X (left)
                         .withRotationalRate(-driveJoystick.getRightX() * MaxAngularRate) // Drive counterclockwise with
                                                                                          // negative X (left)
                 ));
@@ -146,7 +160,7 @@ public class RobotContainer {
 
         driveJoystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
         driveJoystick.b().whileTrue(drivetrain.applyRequest(
-                () -> point.withModuleDirection(new Rotation2d(-driveJoystick.getLeftY(), -driveJoystick.getLeftX()))));
+                () -> point.withModuleDirection(new Rotation2d(-driveJoystick.getLeftY(), -driveJoystick.getLeftX())) ));
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
