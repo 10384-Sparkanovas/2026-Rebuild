@@ -18,8 +18,8 @@ import frc.robot.generated.Constants;
 import frc.robot.generated.Constants.HingeConstants;
 
 public class HingeMotor extends SubsystemBase{
-    private final TalonFX leftHinge = new TalonFX(HingeConstants.leftHingeID);
-    private final TalonFX rightHinge = new TalonFX(HingeConstants.rightHingeID);
+    private final TalonFX leftHinge = new TalonFX(HingeConstants.leftHingeID, Constants.nonDriverConstants.canivore);
+    private final TalonFX rightHinge = new TalonFX(HingeConstants.rightHingeID, Constants.nonDriverConstants.canivore);
     private final MotionMagicVoltage request = new MotionMagicVoltage(0).withSlot(0);
     
 

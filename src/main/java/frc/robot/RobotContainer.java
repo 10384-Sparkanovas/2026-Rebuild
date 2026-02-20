@@ -12,6 +12,8 @@ import com.ctre.phoenix6.sim.TalonFXSimState.MotorType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.motorcontrol.Talon;
+
 import com.revrobotics.spark.SparkFlex;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -20,11 +22,14 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.Command.ShooterFeederCommand;
 import frc.robot.generated.Constants;
 import frc.robot.generated.TunerConstantsSwerve;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.FeederSubystem;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.MotorTest;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.HingeMotor;
 
 public class RobotContainer {
@@ -50,13 +55,22 @@ public class RobotContainer {
     private  SparkFlex intakeMotor = new SparkFlex(Constants.nonDriverConstants.intakeID, com.revrobotics.spark.SparkLowLevel.MotorType.kBrushless);
     private  TalonFX motor1; 
     private  TalonFX motor2;
-
+    private TalonFX feederMotor = new TalonFX(Constants.feederConstants.feederID, Constants.nonDriverConstants.canivore);
+    private TalonFX indexMotor = new TalonFX(Constants.nonDriverConstants.indexMotorID,Constants.nonDriverConstants.canivore);
+   // private TalonFX shooterMotor = new TalonFX(Constants.ShooterConstants.shooterID, Constants.nonDriverConstants.canivore);
+    //private TalonFX feederShooter = new TalonFX(Constants.feederConstants.feederID, Constants.nonDriverConstants.canivore);
+    //private FeederSubystem feederSubystem = new FeederSubystem(feederMotor);
     // Subsystems
     public final CommandSwerveDrivetrain drivetrain = TunerConstantsSwerve.createDrivetrain();
     public final MotorTest motorTest = new MotorTest(motor1, motor2);
+    public final Shooter shooterSubsystem = new Shooter();
+    public final FeederSubystem feederSubsystem = new FeederSubystem(feederMotor);
+
+    //Command 
+    public final ShooterFeederCommand shooterFeederCmd = new ShooterFeederCommand(feederSubsystem, shooterSubsystem, feederMotor);
+    public final Intake intake = new Intake(intakeMotor, indexMotor);
     
-    
-    public final Intake intake = new Intake(intakeMotor);
+    //public final Shooter shooter = new Shooter()
 
     public final HingeMotor hinge = new HingeMotor();
 
@@ -67,8 +81,10 @@ public class RobotContainer {
 
     private void configureOperatorBindings() {
         //operatorJoystick.b().whileTrue(Commands.run(intake::intakeFuel, intake));
+
+        //Intake bindings
         operatorJoystick.b().whileTrue(Commands.run(() -> {
-            intake.intakeFuel(0.25);
+            intake.intakeFuel(0.40);
         }, intake));
         operatorJoystick.x().whileTrue(Commands.run(() -> {
             intake.exhaustFuel(-0.25);
@@ -79,14 +95,30 @@ public class RobotContainer {
         operatorJoystick.x().whileFalse(Commands.run(() -> {
             intake.stopMotor(0);
         }, intake));
+   
+        
+        //Shooter bindings
+        operatorJoystick.y().whileTrue(Commands.run(() -> {feederSubsystem.runMotor(60);
+                                                            //shooterSubsystem.runAtVelocity(40);
+                                                            
+                                                })); 
+                                                //this joystick binding will be changed later
+        operatorJoystick.a().whileTrue(Commands.run(() -> {shooterSubsystem.runAtVelocity(50);}));
+        
+        operatorJoystick.y().whileFalse(Commands.run(() -> {feederSubsystem.stop(); shooterSubsystem.stop();}));
 
         
+
+        //Hinge bindings
         operatorJoystick.povDown().onTrue(Commands.run(() -> {
             hinge.down(0);
         }, hinge));
         operatorJoystick.povUp().onTrue(Commands.run(() -> {
             hinge.down(0.25);
         }, hinge));
+        //operatorJoystick.a().onTrue(Commands.run(() -> {
+        //   hinge.down(0.125);
+        //}, hinge));   
        
          
 

@@ -1,16 +1,14 @@
 package frc.robot.generated;
 
 import com.ctre.phoenix6.CANBus;
-import com.revrobotics.spark.SparkFlex;
-
-import edu.wpi.first.wpilibj.XboxController;
 
 public class Constants {
     
     public static final class nonDriverConstants{
         public static final int intakeID = 17;
+        public static final int indexMotorID = 12;
        
-        public static final CANBus canivore = new CANBus("put name here");
+        public static final CANBus canivore = new CANBus("CANivore");
         public static final int operatorID = 0;
         public static final int driverID = 1;
         
@@ -37,10 +35,20 @@ public class Constants {
 
     }
     public static final class ShooterConstants{
-        public static final int shooterID = 20;
+        public static final int shooterID = 42;
+        public static final double kS = 0;
+        public static final double kA = 0.02;
+        public static final double kV = 0.12;
+        public static final double kP = 0.5;
+        public static final double kI = 0;
+        public static final double kD = 0.01;
+    }
+
+    public static final class feederConstants{
+        public static final int feederID = 43;
         public static final double kS = 0;
         public static final double kV = 0;
-        public static final double kP = 0;
+        public static final double kP = 0.5;
         public static final double kI = 0;
         public static final double kD = 0;
     }
