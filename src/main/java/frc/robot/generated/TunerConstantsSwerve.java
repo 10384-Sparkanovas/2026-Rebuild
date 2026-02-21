@@ -90,8 +90,8 @@ public class TunerConstantsSwerve {
     private static final double kSteerGearRatio = 18.75;
     private static final Distance kWheelRadius = Inches.of(2);
 
-    private static final boolean kInvertLeftSide = true;
-    private static final boolean kInvertRightSide = false;
+    private static final boolean kInvertLeftSide = false; //true -> og
+    private static final boolean kInvertRightSide = true; //false -> og
 
     private static final int kPigeonId = 30;
 

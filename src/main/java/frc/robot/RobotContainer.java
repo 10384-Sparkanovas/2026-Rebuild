@@ -31,6 +31,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.MotorTest;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.HingeMotor;
+import frc.robot.subsystems.Indexer;
 
 public class RobotContainer {
     private double MaxSpeed = TunerConstantsSwerve.kSpeedAt12Volts.in(MetersPerSecond) * 0.4; // kSpeedAt12Volts desired
@@ -55,21 +56,16 @@ public class RobotContainer {
     //private  SparkFlex intakeMotor = new SparkFlex(Constants.nonDriverConstants.intakeID, com.revrobotics.spark.SparkLowLevel.MotorType.kBrushless);
     private  TalonFX motor1; 
     private  TalonFX motor2;
-    //private TalonFX feederMotor = new TalonFX(Constants.feederConstants.feederID, Constants.nonDriverConstants.canivore);
-    private TalonFX indexMotor = new TalonFX(Constants.nonDriverConstants.indexMotorID,Constants.nonDriverConstants.canivore);
-   // private TalonFX shooterMotor = new TalonFX(Constants.ShooterConstants.shooterID, Constants.nonDriverConstants.canivore);
-    //private TalonFX feederShooter = new TalonFX(Constants.feederConstants.feederID, Constants.nonDriverConstants.canivore);
-    //private FeederSubystem feederSubystem = new FeederSubystem(feederMotor);
+    
     // Subsystems
     public final CommandSwerveDrivetrain drivetrain = TunerConstantsSwerve.createDrivetrain();
     public final MotorTest motorTest = new MotorTest(motor1, motor2);
     public final Shooter shooterSubsystem = new Shooter();
     public final FeederSubystem feederSubsystem = new FeederSubystem();
-
+    public final Indexer indexer = new Indexer();
     //Command 
     //public final ShooterFeederCommand shooterFeederCmd = new ShooterFeederCommand(feederSubsystem, shooterSubsystem, feederMotor);
     public final Intake intake = new Intake();
-    
     //public final Shooter shooter = new Shooter()
 
     public final HingeMotor hinge = new HingeMotor();
@@ -103,23 +99,26 @@ public class RobotContainer {
                                                             //shooterSubsystem.runAtVelocity(40);
                                                             
                                                 })); 
-     operatorJoystick.povRight().whileTrue(Commands.run(() -> {feederSubsystem.runAtVelocity(60);
+        operatorJoystick.povRight().whileTrue(Commands.run(() -> {feederSubsystem.runAtVelocity(60);
             
                                                             //shooterSubsystem.runAtVelocity(40);
                                                             
                                                 }));
-     operatorJoystick.povRight().whileFalse(Commands.run(() -> {feederSubsystem.stop();
+        operatorJoystick.povRight().whileFalse(Commands.run(() -> {feederSubsystem.stop();
             
                                                             //shooterSubsystem.runAtVelocity(40);
                                                             
                                                 }));
                                                 //this joystick binding will be changed later
-        operatorJoystick.a().whileTrue(Commands.run(() -> {shooterSubsystem.runAtVelocity(65); feederSubsystem.runAtVelocity(30);}));
-        
+        operatorJoystick.a().whileTrue(Commands.run(() -> {shooterSubsystem.runAtVelocity(30); feederSubsystem.runAtVelocity(30); indexer.runAtVelocity(-30); }));
+        operatorJoystick.a().whileFalse(Commands.run(() -> {shooterSubsystem.runAtVelocity(0); feederSubsystem.runAtVelocity(0); indexer.runAtVelocity(0); }));
+           operatorJoystick.y().whileTrue(Commands.run(() -> {shooterSubsystem.runAtVelocity(-30); feederSubsystem.runAtVelocity(-30); indexer.runAtVelocity(30); }));
+        operatorJoystick.y().whileFalse(Commands.run(() -> {shooterSubsystem.runAtVelocity(0); feederSubsystem.runAtVelocity(0); indexer.runAtVelocity(0); }));
 
-        operatorJoystick.a().whileTrue(Commands.run(() -> {shooterSubsystem.runAtVelocity(65); feederSubsystem.runAtVelocity(30);}));
+        //operatorJoystick.a().whileTrue(Commands.run(() -> {shooterSubsystem.runAtVelocity(65); feederSubsystem.runAtVelocity(30);}));
 
         operatorJoystick.y().whileFalse(Commands.run(() -> {feederSubsystem.stop(); shooterSubsystem.stop();}));
+
 
         
 

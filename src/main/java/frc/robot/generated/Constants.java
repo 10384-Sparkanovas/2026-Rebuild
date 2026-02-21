@@ -6,7 +6,6 @@ public class Constants {
     
     public static final class nonDriverConstants{
         public static final int intakeID = 17;
-        public static final int indexMotorID = 12;
        
         public static final CANBus canivore = new CANBus("CANivore");
         public static final int operatorID = 0;
@@ -52,6 +51,19 @@ public class Constants {
         public static final double kI = 0;
         public static final double kD = 0;
     }
+
+    public static final class indexerConstants {
+    public static final int indexMotorID = 44;
+    public static final double kGearRatio = 1.0;
+    // Tuning for Kraken X44
+    public static final double kS = 0.1;
+    public static final double kA = 0;
+    public static final double kV = 0.0956;
+    public static final double kP = 0.11;
+    public static final double kI = 0.0;
+    public static final double kD = 0.0;
+ 
+}
 
     
 }
