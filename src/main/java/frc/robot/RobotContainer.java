@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-//import frc.robot.Command.ShooterFeederCommand;
+import frc.robot.Command.ShooterFeederCommand;
 import frc.robot.generated.Constants;
 import frc.robot.generated.TunerConstantsSwerve;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -31,7 +31,8 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.MotorTest;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.HingeMotor;
-import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.Indexerx44;
+//import frc.robot.subsystems.IndexerNeo;
 
 public class RobotContainer {
     private double MaxSpeed = TunerConstantsSwerve.kSpeedAt12Volts.in(MetersPerSecond) * 0.4; // kSpeedAt12Volts desired
@@ -58,12 +59,14 @@ public class RobotContainer {
     private  TalonFX motor2;
     
     // Subsystems
-    public final CommandSwerveDrivetrain drivetrain = TunerConstantsSwerve.createDrivetrain();
+    // public final CommandSwerveDrivetrain drivetrain = TunerConstantsSwerve.createDrivetrain();
     public final MotorTest motorTest = new MotorTest(motor1, motor2);
     public final Shooter shooterSubsystem = new Shooter();
     public final FeederSubystem feederSubsystem = new FeederSubystem();
-    public final Indexer indexer = new Indexer();
+    public final Indexerx44 indexer = new Indexerx44();
+    //public final IndexerNeo indexer = new IndexerNeo();
     //Command 
+    public final ShooterFeederCommand shooterFeederCommand = new ShooterFeederCommand(feederSubsystem, shooterSubsystem, indexer, 60);
     //public final ShooterFeederCommand shooterFeederCmd = new ShooterFeederCommand(feederSubsystem, shooterSubsystem, feederMotor);
     public final Intake intake = new Intake();
     //public final Shooter shooter = new Shooter()
@@ -94,30 +97,32 @@ public class RobotContainer {
    
         
         //Shooter bindings
-        operatorJoystick.y().whileTrue(Commands.run(() -> {feederSubsystem.runAtVelocity(30);
-
-                                                            //shooterSubsystem.runAtVelocity(40);
-                                                            
-                                                })); 
-        operatorJoystick.povRight().whileTrue(Commands.run(() -> {feederSubsystem.runAtVelocity(60);
-            
-                                                            //shooterSubsystem.runAtVelocity(40);
-                                                            
-                                                }));
-        operatorJoystick.povRight().whileFalse(Commands.run(() -> {feederSubsystem.stop();
-            
-                                                            //shooterSubsystem.runAtVelocity(40);
-                                                            
-                                                }));
+        
                                                 //this joystick binding will be changed later
-        operatorJoystick.a().whileTrue(Commands.run(() -> {shooterSubsystem.runAtVelocity(30); feederSubsystem.runAtVelocity(30); indexer.runAtVelocity(-30); }));
-        operatorJoystick.a().whileFalse(Commands.run(() -> {shooterSubsystem.runAtVelocity(0); feederSubsystem.runAtVelocity(0); indexer.runAtVelocity(0); }));
-           operatorJoystick.y().whileTrue(Commands.run(() -> {shooterSubsystem.runAtVelocity(-30); feederSubsystem.runAtVelocity(-30); indexer.runAtVelocity(30); }));
-        operatorJoystick.y().whileFalse(Commands.run(() -> {shooterSubsystem.runAtVelocity(0); feederSubsystem.runAtVelocity(0); indexer.runAtVelocity(0); }));
+        //operatorJoystick.a().whileTrue(Commands.run(() -> {shooterSubsystem.runAtVelocity(30); feederSubsystem.runAtVelocity(30); indexer.runAtVelocity(-30); }));
+        //operatorJoystick.a().whileFalse(Commands.run(() -> {shooterSubsystem.runAtVelocity(0); feederSubsystem.runAtVelocity(0); indexer.runAtVelocity(0); }));
+        //operatorJoystick.y().whileTrue(Commands.run(() -> {shooterSubsystem.runAtVelocity(-30); feederSubsystem.runAtVelocity(-30); indexer.runAtVelocity(30); }));
+        //operatorJoystick.y().whileFalse(Commands.run(() -> {shooterSubsystem.runAtVelocity(0); feederSubsystem.runAtVelocity(0); indexer.runAtVelocity(0); }));
+        operatorJoystick.a().whileTrue(shooterFeederCommand);
 
+    
+       
         //operatorJoystick.a().whileTrue(Commands.run(() -> {shooterSubsystem.runAtVelocity(65); feederSubsystem.runAtVelocity(30);}));
 
-        operatorJoystick.y().whileFalse(Commands.run(() -> {feederSubsystem.stop(); shooterSubsystem.stop();}));
+        operatorJoystick.a().whileFalse(Commands.run(() -> {feederSubsystem.stop(); shooterSubsystem.stop(); indexer.stop();}));
+
+        // operatorJoystick.rightBumper().whileTrue(Commands.run(() -> {
+        //     indexer.IndexIn(0.25);
+        // }));
+        //operatorJoystick.rightTrigger.whileTrueCommands.run(() -> {
+        //     indexer.IndexOut(0.25);
+        // }));
+        // operatorJoystick.rightBumper().whileFalse(Commands.run(() -> {
+        //     indexer.stopMotor(0);
+        // }));
+        //operatorJoystick.rightTrigger.whileFalseCommands.run(() -> {
+        //     indexer.stopMotor(0);
+        // }));
 
 
         
@@ -141,37 +146,57 @@ public class RobotContainer {
     private void configureDriveBindings() {
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
-        drivetrain.setDefaultCommand(
-                // Drivetrain will execute this command periodically
-                drivetrain.applyRequest(() -> drive.withVelocityX(-driveJoystick.getLeftY() * MaxSpeed ) // Drive forward
-                                                                                                        // with negative
-                                                                                                        // Y (forward)
-                        .withVelocityY(-driveJoystick.getLeftX() * MaxSpeed ) // Drive left with negative X (left)
-                        .withRotationalRate(-driveJoystick.getRightX() * MaxAngularRate) // Drive counterclockwise with
-                                                                                         // negative X (left)
-                ));
+
+        //COMMENTED FPR SYSID
+        // drivetrain.setDefaultCommand(
+        //         // Drivetrain will execute this command periodically
+        //         drivetrain.applyRequest(() -> drive.withVelocityX(-driveJoystick.getLeftY() * MaxSpeed ) // Drive forward
+        //                                                                                                 // with negative
+        //                                                                                                 // Y (forward)
+        //                 .withVelocityY(-driveJoystick.getLeftX() * MaxSpeed ) // Drive left with negative X (left)
+        //                 .withRotationalRate(-driveJoystick.getRightX() * MaxAngularRate) // Drive counterclockwise with
+        //                                                                                  // negative X (left)
+        //         ));
 
         // Idle while the robot is disabled. This ensures the configured
         // neutral mode is applied to the drive motors while disabled.
-        final var idle = new SwerveRequest.Idle();
-        RobotModeTriggers.disabled().whileTrue(
-                drivetrain.applyRequest(() -> idle).ignoringDisable(true));
 
-        driveJoystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
-        driveJoystick.b().whileTrue(drivetrain.applyRequest(
-                () -> point.withModuleDirection(new Rotation2d(-driveJoystick.getLeftY(), -driveJoystick.getLeftX())) ));
+        //COMMENTED FOR SYSID
+        // final var idle = new SwerveRequest.Idle();
+        // RobotModeTriggers.disabled().whileTrue(
+        //         drivetrain.applyRequest(() -> idle).ignoringDisable(true));
+
+        // driveJoystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
+        // driveJoystick.b().whileTrue(drivetrain.applyRequest(
+        //         () -> point.withModuleDirection(new Rotation2d(-driveJoystick.getLeftY(), -driveJoystick.getLeftX())) ));
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
-        driveJoystick.back().and(driveJoystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        driveJoystick.back().and(driveJoystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-        driveJoystick.start().and(driveJoystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-        driveJoystick.start().and(driveJoystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+        // driveJoystick.back().and(driveJoystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+        // driveJoystick.back().and(driveJoystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+        // driveJoystick.start().and(driveJoystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+        // driveJoystick.start().and(driveJoystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+
+        //Shooter SysId routines
+        driveJoystick.back().and(driveJoystick.a().whileTrue(shooterSubsystem.sysIdQuasistatic(Direction.kForward)));
+        driveJoystick.back().and(driveJoystick.b().whileTrue(shooterSubsystem.sysIDDynamic(Direction.kReverse)));
+        driveJoystick.start().and(driveJoystick.a().whileTrue(shooterSubsystem.sysIdQuasistatic(Direction.kForward)));
+        driveJoystick.start().and(driveJoystick.b().whileTrue(shooterSubsystem.sysIDDynamic(Direction.kReverse)));
+
+        //feeder SysId routines
+        // driveJoystick.back().and(driveJoystick.povUp().whileTrue(feederSubsystem.sysIdQuasistatic(Direction.kForward)));
+        // driveJoystick.back().and(driveJoystick.povDown().whileTrue(feederSubsystem.sysIDDynamic(Direction.kReverse)));
+        // driveJoystick.start().and(driveJoystick.povUp().whileTrue(feederSubsystem.sysIdQuasistatic(Direction.kForward)));
+        // driveJoystick.start().and(driveJoystick.povDown().whileTrue(feederSubsystem.sysIDDynamic(Direction.kReverse)));
+
+        //hinge SysId routines
 
         // reset the field-centric heading on left bumper press
-        driveJoystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-        drivetrain.registerTelemetry(logger::telemeterize);
+        //COMMENTED FOR SYSID
+        // driveJoystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+
+        // drivetrain.registerTelemetry(logger::telemeterize);
     }
 
     public Command getAutonomousCommand() {
