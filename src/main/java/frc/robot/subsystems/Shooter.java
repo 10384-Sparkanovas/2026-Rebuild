@@ -1,4 +1,5 @@
 package frc.robot.subsystems;
+import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.SignalLogger;
@@ -10,6 +11,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
+import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -23,7 +25,9 @@ public class Shooter extends SubsystemBase {
     // Create request once to save memory
     private final VelocityVoltage request = new VelocityVoltage(0).withSlot(0);
     
-    private final VoltageOut voltageOut = new VoltageOut(2.0);
+    // private final VoltageOut voltageOut = new VoltageOut(2.0);
+    private final VoltageOut sysIDOut = new VoltageOut(0);
+    // private Boolean shooterIsAtVelocity = false;
     public Shooter() {
         //this.shooterMotor = shooterMotor;
         
@@ -44,9 +48,13 @@ public class Shooter extends SubsystemBase {
         }   
     public void runAtVelocity(double rps) {
         shooterMotor.setControl(request.withVelocity(rps)); //rps in this case would be the target error?
+       
     }
     public void stop() {
         shooterMotor.set(0);
+    }
+    public boolean atTargetRps(double targetRPS, double tolerance){
+        return Math.abs(shooterMotor.getVelocity().getValueAsDouble() - targetRPS) < tolerance;
     }
    // private final SysIdRoutine shooterIdRoutine = new SysIdRoutine(SysIdRoutine.Config(null, Volts.of(2.0), null), 
               //  SysIdRoutine.Mechanism((volts) -> shooterMotor.setControl(voltageOut.withOut)));
@@ -65,5 +73,21 @@ public class Shooter extends SubsystemBase {
         //         ()-> stop()
         //     );
         // }
+
+    //creating a sysID routine:
+    public SysIdRoutine sysIdRoutine = new SysIdRoutine(new SysIdRoutine.Config(
+        null,
+        Volts.of(7),
+        Seconds.of(10)
+    ), new SysIdRoutine.Mechanism((Voltage volts) -> {shooterMotor.setControl(sysIDOut.withOutput(volts.in(Volts)));}, null , this)
+    );
+
+    public Command sysIdQuasistatic(SysIdRoutine.Direction direction){
+        return sysIdRoutine.quasistatic(direction);
+    }
+    public Command sysIDDynamic(SysIdRoutine.Direction direction){
+        return sysIdRoutine.dynamic(direction);
+    }
+    
 
 }

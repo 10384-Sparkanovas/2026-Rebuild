@@ -8,13 +8,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase ;
 import frc.robot.generated.Constants;
 // Import the Constants class
 import frc.robot.generated.Constants.indexerConstants;
-public class Indexer extends SubsystemBase {
+public class Indexerx44 extends SubsystemBase {
 //private final TalonFX motor = new TalonFX ( IndexerConstants . kMotorID ) ;
  private TalonFX indexMotor = new TalonFX(indexerConstants.indexMotorID,Constants.nonDriverConstants.canivore);
 // Create request once to save memory
 private final VelocityVoltage request = new VelocityVoltage (0).withSlot (0) ;
 
-public Indexer() {
+public Indexerx44() {
 TalonFXConfiguration config = new TalonFXConfiguration () ;
 // Tuning for Velocity
  

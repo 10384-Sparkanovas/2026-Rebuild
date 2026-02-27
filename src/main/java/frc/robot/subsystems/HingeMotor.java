@@ -53,6 +53,7 @@ public class HingeMotor extends SubsystemBase{
         //rightHinge.setControl(request.withPosition(rotation));
         
     }
+    
    
 
 
