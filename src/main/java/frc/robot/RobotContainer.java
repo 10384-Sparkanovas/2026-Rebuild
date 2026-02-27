@@ -10,9 +10,14 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.TalonFXSimState.MotorType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.spark.SparkFlex;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -39,7 +44,7 @@ public class RobotContainer {
     private double MaxAngularRate = RotationsPerSecond.of(0.1).in(RadiansPerSecond) * 0.4; // 3/4 of a rotation per
                                                                                            // second max angular
                                                                                            // velocity
-
+    private final SendableChooser<Command> autoChooser;
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
             .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
@@ -71,7 +76,24 @@ public class RobotContainer {
     public final HingeMotor hinge = new HingeMotor();
 
     public RobotContainer() {
-        configureDriveBindings();
+
+        //DEFAULT AUTO IS THE MIDDLE AUTO
+        boolean notMiddle = false; //to change auto change these two booleans
+        boolean notRight = false;
+        //autoChooser = AutoBuilder.buildAutoChooser("Center start - middle shooting"); // builds an auto chooser and defults command.chose() to none
+        if(notMiddle && notRight){
+            autoChooser = AutoBuilder.buildAutoChooser("Right Shooting");
+
+        }else if (notMiddle == true && notRight){
+            autoChooser = AutoBuilder.buildAutoChooser("Left Shooting");
+        }else{
+            autoChooser = AutoBuilder.buildAutoChooser("Center start - middle shooting");
+        }
+        
+
+        SmartDashboard.putData("auto chosen", autoChooser);
+        //Web cam stuff:
+        CameraServer.startAutomaticCapture(0); //starts the camera
         configureOperatorBindings();
     }
 
@@ -175,6 +197,9 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return Commands.print("No autonomous command configured");
+
+
+        //return Commands.print("No autonomous command configured");
+        return autoChooser.getSelected(); //will select the default which is Center start - middle shooter
     }
 }
