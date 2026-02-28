@@ -42,7 +42,7 @@ public class FeederSubystem extends SubsystemBase{
         config.Slot0.kI = feederConstants.kI;
         config.Slot0.kD = feederConstants.kD;
 
-        config.CurrentLimits.StatorCurrentLimit = Constants.HingeConstants.MaxCurrent;
+        config.CurrentLimits.StatorCurrentLimit = 80;
         config.CurrentLimits.StatorCurrentLimitEnable = true;
         config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         feederMotor.getConfigurator().apply(config);

@@ -38,6 +38,7 @@ public class Intake extends SubsystemBase{
 
     public Intake() {
         //this.intakeMotor = intakeMotor;
+        
        
     }
 

@@ -64,6 +64,16 @@ public class Constants {
     public static final double kD = 0.0;
  
 }
+public static final class ClimbConstants{
+        public static final int ClimbID = 45;
+        public static final double kS = 0;
+        public static final double kA = 0.02;
+        public static final double kV = 0.12;
+        public static final double kP = 0.5;
+        public static final double kI = 0;
+        public static final double kD = 0.01;
+    
+    }
 
     
 }

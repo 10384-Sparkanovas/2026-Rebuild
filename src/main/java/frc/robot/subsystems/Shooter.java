@@ -1,6 +1,9 @@
 package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
+import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.Second;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -20,17 +23,21 @@ import frc.robot.generated.Constants.ShooterConstants;
 import frc.robot.generated.Constants;
 
 public class Shooter extends SubsystemBase {
-        
+       
     private final TalonFX shooterMotor = new TalonFX(Constants.ShooterConstants.shooterID, Constants.nonDriverConstants.canivore);
     // Create request once to save memory
     private final VelocityVoltage request = new VelocityVoltage(0).withSlot(0);
-    
-    // private final VoltageOut voltageOut = new VoltageOut(2.0);
-    private final VoltageOut sysIDOut = new VoltageOut(0);
-    // private Boolean shooterIsAtVelocity = false;
+   
+    // SysId Control Request (Voltage)
+    // SysId requires direct voltage control, ignoring PID constants
+    private final VoltageOut sysIdControl = new VoltageOut(0);
+    // The SysId Routine Object
+    private final SysIdRoutine sysIdRoutine;
+   
+
     public Shooter() {
         //this.shooterMotor = shooterMotor;
-        
+       
         TalonFXConfiguration config = new TalonFXConfiguration();
         // Tuning for Velocity
         config.Slot0.kS = ShooterConstants.kS;
@@ -41,14 +48,34 @@ public class Shooter extends SubsystemBase {
         config.Slot0.kA = ShooterConstants.kA;
         // Optional: If you want to put current limit in constants too
         // config.CurrentLimits.StatorCurrentLimit = ShooterConstants.kCurrentLimit;
-        config.CurrentLimits.StatorCurrentLimit = Constants.HingeConstants.MaxCurrent;
+        config.CurrentLimits.StatorCurrentLimit = 80;
         config.CurrentLimits.StatorCurrentLimitEnable = true;
-        config.MotorOutput.NeutralMode = NeutralModeValue.Brake; // Coast
+        config.MotorOutput.NeutralMode = NeutralModeValue.Brake; // Coast?
         shooterMotor.getConfigurator().apply(config);
-        }   
+
+        sysIdRoutine = new SysIdRoutine(
+            new SysIdRoutine.Config(
+                Volts.of(1).per(Second),
+                Volts.of(7),            
+                Seconds.of(10)          
+            ),
+            new SysIdRoutine.Mechanism(
+                (Voltage volts) -> {
+                    shooterMotor.setControl(sysIdControl.withOutput(volts.in(Volts)));
+                },
+                (SysIdRoutineLog log) -> {
+                    log.motor("Shooter-Motor")
+                    .voltage(Volts.of(shooterMotor.getMotorVoltage().getValueAsDouble()))
+                    .angularPosition(Rotations.of(shooterMotor.getPosition().getValueAsDouble()))
+                    .angularVelocity(RotationsPerSecond.of(shooterMotor.getVelocity().getValueAsDouble()));
+                },
+                this
+            )
+        );
+    }  
+
     public void runAtVelocity(double rps) {
-        shooterMotor.setControl(request.withVelocity(rps)); //rps in this case would be the target error?
-       
+        shooterMotor.setControl(request.withVelocity(rps)); //rps in this case would be the target
     }
     public void stop() {
         shooterMotor.set(0);
@@ -56,38 +83,11 @@ public class Shooter extends SubsystemBase {
     public boolean atTargetRps(double targetRPS, double tolerance){
         return Math.abs(shooterMotor.getVelocity().getValueAsDouble() - targetRPS) < tolerance;
     }
-   // private final SysIdRoutine shooterIdRoutine = new SysIdRoutine(SysIdRoutine.Config(null, Volts.of(2.0), null), 
-              //  SysIdRoutine.Mechanism((volts) -> shooterMotor.setControl(voltageOut.withOut)));
-    // Command Factory
-    // Uses startEnd: Runs on start, Stops on end.()
-        // public Command runShooterCmd(double rps) {
-        //     return this.startEnd(
-        //         ()-> runAtVelocity(rps),
-        //         ()-> stop()
-        //     );
-        // }
-        // // temporary for testing
-        // public Command reverseShooterCmd(double rps) {
-        //     return this.startEnd(
-        //         ()-> runAtVelocity(-rps),
-        //         ()-> stop()
-        //     );
-        // }
-
-    //creating a sysID routine:
-    public SysIdRoutine sysIdRoutine = new SysIdRoutine(new SysIdRoutine.Config(
-        null,
-        Volts.of(7),
-        Seconds.of(10)
-    ), new SysIdRoutine.Mechanism((Voltage volts) -> {shooterMotor.setControl(sysIDOut.withOutput(volts.in(Volts)));}, null , this)
-    );
-
+   
     public Command sysIdQuasistatic(SysIdRoutine.Direction direction){
         return sysIdRoutine.quasistatic(direction);
     }
     public Command sysIDDynamic(SysIdRoutine.Direction direction){
         return sysIdRoutine.dynamic(direction);
     }
-    
-
 }

@@ -40,9 +40,9 @@ import frc.robot.subsystems.Indexerx44;
 //import frc.robot.subsystems.IndexerNeo;
 
 public class RobotContainer {
-    private double MaxSpeed = TunerConstantsSwerve.kSpeedAt12Volts.in(MetersPerSecond) * 0.4; // kSpeedAt12Volts desired
+    private double MaxSpeed = TunerConstantsSwerve.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired
                                                                                               // top speed
-    private double MaxAngularRate = RotationsPerSecond.of(0.1).in(RadiansPerSecond) * 0.4; // 3/4 of a rotation per
+    private double MaxAngularRate = RotationsPerSecond.of(.75).in(RadiansPerSecond); // 3/4 of a rotation per
                                                                                            // second max angular
                                                                                            // velocity
     private final SendableChooser<Command> autoChooser;
@@ -200,10 +200,10 @@ public class RobotContainer {
         // driveJoystick.start().and(driveJoystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
         //Shooter SysId routines
-        driveJoystick.back().and(driveJoystick.a().whileTrue(shooterSubsystem.sysIdQuasistatic(Direction.kForward)));
-        driveJoystick.back().and(driveJoystick.b().whileTrue(shooterSubsystem.sysIDDynamic(Direction.kReverse)));
-        driveJoystick.start().and(driveJoystick.a().whileTrue(shooterSubsystem.sysIdQuasistatic(Direction.kForward)));
-        driveJoystick.start().and(driveJoystick.b().whileTrue(shooterSubsystem.sysIDDynamic(Direction.kReverse)));
+        driveJoystick.back().and(driveJoystick.a()).whileTrue(shooterSubsystem.sysIdQuasistatic(Direction.kForward));
+        driveJoystick.back().and(driveJoystick.b()).whileTrue(shooterSubsystem.sysIDDynamic(Direction.kReverse));
+        driveJoystick.start().and(driveJoystick.a()).whileTrue(shooterSubsystem.sysIdQuasistatic(Direction.kForward));
+        driveJoystick.start().and(driveJoystick.b()).whileTrue(shooterSubsystem.sysIDDynamic(Direction.kReverse));
 
         //feeder SysId routines
         // driveJoystick.back().and(driveJoystick.povUp().whileTrue(feederSubsystem.sysIdQuasistatic(Direction.kForward)));
