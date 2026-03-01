@@ -219,7 +219,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
 
         } catch (Exception e) {
-            // TODO: handle exception
+            // TO DO: handle exception
             DriverStation.reportError("Failed to load and configure Autobuilder", e.getStackTrace());
         }
     }

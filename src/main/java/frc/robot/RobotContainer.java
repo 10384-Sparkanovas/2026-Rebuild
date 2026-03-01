@@ -174,10 +174,10 @@ public class RobotContainer {
         //COMMENTED FPR SYSID
          drivetrain.setDefaultCommand(
            // Drivetrain will execute this command periodically
-                drivetrain.applyRequest(() -> drive.withVelocityX(driveJoystick.getLeftY() * MaxSpeed) // Drive forward
+                drivetrain.applyRequest(() -> drive.withVelocityX(-driveJoystick.getLeftY() * MaxSpeed) // Drive forward
                                                                                                         // with negative
                                                                                                         // Y (forward)
-                       .withVelocityY(driveJoystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                       .withVelocityY(-driveJoystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
                         .withRotationalRate(-driveJoystick.getRightX() * MaxAngularRate) // Drive counterclockwise with
                                                                                          // negative X (left)
                ));
@@ -227,7 +227,7 @@ public class RobotContainer {
 
 
         //return Commands.print("No autonomous command configured");
-        return new PathPlannerAuto("Test Auto");
+        return new PathPlannerAuto("Right Shooting");
         //return autoChooser.getSelected(); //will select the default which is Center start - middle shooter
     }
 }
