@@ -10,10 +10,15 @@ import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -50,6 +55,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private final SwerveRequest.SysIdSwerveSteerGains m_steerCharacterization = new SwerveRequest.SysIdSwerveSteerGains();
     private final SwerveRequest.SysIdSwerveRotation m_rotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
 
+    private final SwerveRequest.ApplyRobotSpeeds m_robotSpeeds = new SwerveRequest.ApplyRobotSpeeds();
     /* SysId routine for characterizing translation. This is used to find PID gains for the drive motors. */
     private final SysIdRoutine m_sysIdRoutineTranslation = new SysIdRoutine(
         new SysIdRoutine.Config(
@@ -110,7 +116,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     );
 
     /* The SysId routine to test */
-    private SysIdRoutine m_sysIdRoutineToApply = m_sysIdRoutineTranslation;
+    private SysIdRoutine m_sysIdRoutineToApply = m_sysIdRoutineSteer; 
 
     /**
      * Constructs a CTRE SwerveDrivetrain using the specified constants.
@@ -130,6 +136,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         if (Utils.isSimulation()) {
             startSimThread();
         }
+        configureAutoBuilder();
     }
 
     /**
@@ -154,6 +161,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         if (Utils.isSimulation()) {
             startSimThread();
         }
+        configureAutoBuilder();
     }
 
     /**
@@ -185,6 +193,34 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         super(drivetrainConstants, odometryUpdateFrequency, odometryStandardDeviation, visionStandardDeviation, modules);
         if (Utils.isSimulation()) {
             startSimThread();
+        }
+        configureAutoBuilder();
+    }
+
+    public void configureAutoBuilder(){
+        try {
+            var config = RobotConfig.fromGUISettings(); //information about the robot
+            AutoBuilder.configure(
+                () -> getState().Pose, //gets current robot pos
+                this::resetPose, //resets the robot pos
+                () -> getState().Speeds,//get the current robot speed
+                //Getting the relative speed supplier
+                (speeds, feedforeward) -> setControl(m_robotSpeeds.withSpeeds(ChassisSpeeds.discretize(
+                  speeds, 0.020)).withWheelForceFeedforwardsX(feedforeward.robotRelativeForcesXNewtons()).withWheelForceFeedforwardsY(feedforeward.robotRelativeForcesYNewtons())),
+
+                  new PPHolonomicDriveController(
+                    new PIDConstants(10,0,0),
+                    new PIDConstants(1,0,0)
+                  ),
+                  config,
+                  () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red, 
+                  this
+            );
+
+
+        } catch (Exception e) {
+            // TODO: handle exception
+            DriverStation.reportError("Failed to load and configure Autobuilder", e.getStackTrace());
         }
     }
 

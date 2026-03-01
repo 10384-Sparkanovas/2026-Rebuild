@@ -44,11 +44,11 @@ public class Indexerx44 extends SubsystemBase {
     }
     // Command Factory
     // Uses startEnd : Runs on start , Stops on end .
-    public Command runIndexerCmd ( double rps ) {
-    return this.startEnd (
-    () -> runAtVelocity ( rps ) ,
-    () -> stop ()
-    ) ;
+    public Command runIndexerCmd(double rps) {
+        return this.startEnd(
+        () -> runAtVelocity (rps),
+        () -> stop()
+        );
     }
     public boolean atSetpoint ( double targetRPS , double tolerance ) {
     return Math . abs ( indexMotor. getVelocity () . getValueAsDouble () - targetRPS

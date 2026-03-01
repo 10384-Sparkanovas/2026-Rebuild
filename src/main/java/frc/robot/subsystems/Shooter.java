@@ -55,16 +55,16 @@ public class Shooter extends SubsystemBase {
 
         sysIdRoutine = new SysIdRoutine(
             new SysIdRoutine.Config(
-                Volts.of(1).per(Second),
-                Volts.of(7),            
-                Seconds.of(10)          
+                Volts.of(0.5).per(Second), //Quasistatic 1V per second
+                Volts.of(4),         //0 - 7V Dynamic test   
+                Seconds.of(10)    //Max 10 seconds for either test      
             ),
             new SysIdRoutine.Mechanism(
                 (Voltage volts) -> {
                     shooterMotor.setControl(sysIdControl.withOutput(volts.in(Volts)));
                 },
                 (SysIdRoutineLog log) -> {
-                    log.motor("Shooter-Motor")
+                    log.motor("Indexer-Motor")
                     .voltage(Volts.of(shooterMotor.getMotorVoltage().getValueAsDouble()))
                     .angularPosition(Rotations.of(shooterMotor.getPosition().getValueAsDouble()))
                     .angularVelocity(RotationsPerSecond.of(shooterMotor.getVelocity().getValueAsDouble()));

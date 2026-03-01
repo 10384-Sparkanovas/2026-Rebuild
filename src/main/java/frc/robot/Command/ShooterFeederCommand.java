@@ -37,7 +37,7 @@ public class ShooterFeederCommand extends Command{
         shooterSubsystem.runAtVelocity(targetShooterRPS);
          if(shooterSubsystem.atTargetRps(targetShooterRPS, tolerance)){
                 feedersubystem.runAtVelocity(30);
-                indexerSubsytem.runAtVelocity(-30);
+                indexerSubsytem.runAtVelocity(-40);
          }//method in shooter which returns a boolean val when shooter has reached target velocity
         
     }

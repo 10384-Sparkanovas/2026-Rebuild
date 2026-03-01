@@ -38,6 +38,7 @@ public class FeederSubystem extends SubsystemBase{
          // Tuning for Velocity
         config.Slot0.kS = feederConstants.kS;
         config.Slot0.kV = feederConstants.kV;
+        config.Slot0.kA = feederConstants.kA;
         config.Slot0.kP = feederConstants.kP;
         config.Slot0.kI = feederConstants.kI;
         config.Slot0.kD = feederConstants.kD;

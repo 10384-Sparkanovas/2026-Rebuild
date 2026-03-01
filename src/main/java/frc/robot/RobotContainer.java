@@ -33,17 +33,15 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.FeederSubystem;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.MotorTest;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.HingeMotor;
 import frc.robot.subsystems.Indexerx44;
-//import frc.robot.subsystems.IndexerNeo;
 
 public class RobotContainer {
-    private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+    private double MaxSpeed = 0.4 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
-    private final SendableChooser<Command> autoChooser;
+    // private final SendableChooser<Command> autoChooser;
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
             .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
@@ -58,12 +56,10 @@ public class RobotContainer {
 
     //Object declerations
     //private  SparkFlex intakeMotor = new SparkFlex(Constants.nonDriverConstants.intakeID, com.revrobotics.spark.SparkLowLevel.MotorType.kBrushless);
-    private  TalonFX motor1; 
-    private  TalonFX motor2;
+
     
     // Subsystems
-    // public final CommandSwerveDrivetrain drivetrain = TunerConstantsSwerve.createDrivetrain();
-    public final MotorTest motorTest = new MotorTest(motor1, motor2);
+     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     public final Shooter shooterSubsystem = new Shooter();
     public final FeederSubystem feederSubsystem = new FeederSubystem();
     public final Indexerx44 indexer = new Indexerx44();
@@ -75,27 +71,33 @@ public class RobotContainer {
     //public final Shooter shooter = new Shooter()
 
     public final HingeMotor hinge = new HingeMotor();
+ 
+    private  SendableChooser<Command>autoChooser;
 
     public RobotContainer() {
 
         //DEFAULT AUTO IS THE MIDDLE AUTO
-        boolean notMiddle = false; //to change auto change these two booleans
-        boolean notRight = false;
-        //autoChooser = AutoBuilder.buildAutoChooser("Center start - middle shooting"); // builds an auto chooser and defults command.chose() to none
-        if(notMiddle && notRight){
-            autoChooser = AutoBuilder.buildAutoChooser("Right Shooting");
+        // boolean notMiddle = false; //to change auto change these two booleans
+        // boolean notRight = false;
+        
+        //autoChooser = AutoBuilder.buildAutoChooser("Test Auto"); // builds an auto chooser and defults command.chose() to none
+        
+        // //COMMENTED OUT FOR AUTO FAILURE
+        // if(notMiddle && notRight){
+        //     autoChooser = AutoBuilder.buildAutoChooser("Right Shooting");
 
-        }else if (notMiddle == true && notRight){
-            autoChooser = AutoBuilder.buildAutoChooser("Left Shooting");
-        }else{
-            autoChooser = AutoBuilder.buildAutoChooser("Center start - middle shooting");
-        }
+        // }else if (notMiddle == true && notRight){
+        //     autoChooser = AutoBuilder.buildAutoChooser("Left Shooting");
+        // }else{
+        //     autoChooser = AutoBuilder.buildAutoChooser("Center start - middle shooting");
+        // }
         
 
-        SmartDashboard.putData("auto chosen", autoChooser);
+        //SmartDashboard.putData("auto chosen", autoChooser);
         //Web cam stuff:
         CameraServer.startAutomaticCapture(0); //starts the camera
         configureOperatorBindings();
+        configureDriveBindings();
     }
 
     private void configureOperatorBindings() {
@@ -103,7 +105,7 @@ public class RobotContainer {
 
         //Intake bindings
         operatorJoystick.b().whileTrue(Commands.run(() -> {
-            intake.intakeFuel(0.40);
+            intake.intakeFuel(0.5);
         }, intake));
         operatorJoystick.x().whileTrue(Commands.run(() -> {
             intake.exhaustFuel(-0.25);
@@ -129,10 +131,14 @@ public class RobotContainer {
        
         //operatorJoystick.a().whileTrue(Commands.run(() -> {shooterSubsystem.runAtVelocity(65); feederSubsystem.runAtVelocity(30);}));
 
-        operatorJoystick.a().whileFalse(Commands.run(() -> {feederSubsystem.stop(); shooterSubsystem.stop(); indexer.stop();}));
+        //operatorJoystick.a().whileFalse(Commands.run(() -> {feederSubsystem.stop(); shooterSubsystem.stop(); indexer.stop();}));
 
-        // operatorJoystick.rightBumper().whileTrue(Commands.run(() -> {
-        //     indexer.IndexIn(0.25);
+         operatorJoystick.rightBumper().whileTrue(Commands.run(() -> {indexer.runAtVelocity(-30);}));
+         operatorJoystick.rightBumper().whileFalse(Commands.run(() -> {indexer.runAtVelocity(0);}));
+         operatorJoystick.leftBumper().whileTrue(Commands.run(() -> {shooterSubsystem.runAtVelocity(65);}));
+         operatorJoystick.leftTrigger().whileTrue(Commands.run(() -> {feederSubsystem.runAtVelocity(45);}));
+         operatorJoystick.leftTrigger().whileFalse((Commands.run(() -> {feederSubsystem.runAtVelocity(0);})));
+         //operatorJoystick.leftBumper().whileFalse(Commands.run(() -> {shooterSubsystem.runAtVelocity(0);}));
         // }));
         //operatorJoystick.rightTrigger.whileTrueCommands.run(() -> {
         //     indexer.IndexOut(0.25);
@@ -158,8 +164,6 @@ public class RobotContainer {
         //   hinge.down(0.125);
         //}, hinge));   
        
-         
-
     }
 
 
@@ -168,15 +172,15 @@ public class RobotContainer {
         // and Y is defined as to the left according to WPILib convention.
 
         //COMMENTED FPR SYSID
-        // drivetrain.setDefaultCommand(
-        //         // Drivetrain will execute this command periodically
-        //         drivetrain.applyRequest(() -> drive.withVelocityX(-driveJoystick.getLeftY() * MaxSpeed ) // Drive forward
-        //                                                                                                 // with negative
-        //                                                                                                 // Y (forward)
-        //                 .withVelocityY(-driveJoystick.getLeftX() * MaxSpeed ) // Drive left with negative X (left)
-        //                 .withRotationalRate(-driveJoystick.getRightX() * MaxAngularRate) // Drive counterclockwise with
-        //                                                                                  // negative X (left)
-        //         ));
+         drivetrain.setDefaultCommand(
+           // Drivetrain will execute this command periodically
+                drivetrain.applyRequest(() -> drive.withVelocityX(driveJoystick.getLeftY() * MaxSpeed) // Drive forward
+                                                                                                        // with negative
+                                                                                                        // Y (forward)
+                       .withVelocityY(driveJoystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                        .withRotationalRate(-driveJoystick.getRightX() * MaxAngularRate) // Drive counterclockwise with
+                                                                                         // negative X (left)
+               ));
 
         // Idle while the robot is disabled. This ensures the configured
         // neutral mode is applied to the drive motors while disabled.
@@ -187,21 +191,21 @@ public class RobotContainer {
         //         drivetrain.applyRequest(() -> idle).ignoringDisable(true));
 
         // driveJoystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
-        // driveJoystick.b().whileTrue(drivetrain.applyRequest(
-        //         () -> point.withModuleDirection(new Rotation2d(-driveJoystick.getLeftY(), -driveJoystick.getLeftX())) ));
+        driveJoystick.b().whileTrue(drivetrain.applyRequest(
+                () -> point.withModuleDirection(new Rotation2d(driveJoystick.getLeftY(), driveJoystick.getLeftX())) ));
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
-        // driveJoystick.back().and(driveJoystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        // driveJoystick.back().and(driveJoystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-        // driveJoystick.start().and(driveJoystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-        // driveJoystick.start().and(driveJoystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+        driveJoystick.back().and(driveJoystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+        driveJoystick.back().and(driveJoystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+        driveJoystick.start().and(driveJoystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+        driveJoystick.start().and(driveJoystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
         //Shooter SysId routines
-        driveJoystick.back().and(driveJoystick.a()).whileTrue(shooterSubsystem.sysIdQuasistatic(Direction.kForward));
-        driveJoystick.back().and(driveJoystick.b()).whileTrue(shooterSubsystem.sysIDDynamic(Direction.kReverse));
-        driveJoystick.start().and(driveJoystick.a()).whileTrue(shooterSubsystem.sysIdQuasistatic(Direction.kForward));
-        driveJoystick.start().and(driveJoystick.b()).whileTrue(shooterSubsystem.sysIDDynamic(Direction.kReverse));
+        // driveJoystick.start().and(driveJoystick.a()).whileTrue(shooterSubsystem.sysIdQuasistatic(Direction.kForward));
+        // driveJoystick.start().and(driveJoystick.b()).whileTrue(shooterSubsystem.sysIdQuasistatic(Direction.kReverse));
+        // driveJoystick.start().and(driveJoystick.x()).whileTrue(shooterSubsystem.sysIDDynamic(Direction.kForward));
+        // driveJoystick.start().and(driveJoystick.y()).whileTrue(shooterSubsystem.sysIDDynamic(Direction.kReverse));
 
         //feeder SysId routines
         // driveJoystick.back().and(driveJoystick.povUp().whileTrue(feederSubsystem.sysIdQuasistatic(Direction.kForward)));
@@ -214,15 +218,16 @@ public class RobotContainer {
         // reset the field-centric heading on left bumper press
 
         //COMMENTED FOR SYSID
-        // driveJoystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+        driveJoystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-        // drivetrain.registerTelemetry(logger::telemeterize);
+        drivetrain.registerTelemetry(logger::telemeterize);
     }
 
     public Command getAutonomousCommand() {
 
 
         //return Commands.print("No autonomous command configured");
-        return autoChooser.getSelected(); //will select the default which is Center start - middle shooter
+        return new PathPlannerAuto("Test Auto");
+        //return autoChooser.getSelected(); //will select the default which is Center start - middle shooter
     }
 }
