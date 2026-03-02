@@ -7,19 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "optimal shooting distance"
+            "pathName": "Left Shooting"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Auto shoot"
+            "name": "shoot"
           }
         },
         {
-          "type": "wait",
+          "type": "path",
           "data": {
-            "waitTime": 3.0
+            "pathName": "move to middle left side"
           }
         }
       ]

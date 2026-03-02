@@ -11,7 +11,9 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.TalonFXSimState.MotorType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.events.EventTrigger;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -36,6 +38,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.HingeMotor;
 import frc.robot.subsystems.Indexerx44;
+import frc.robot.Command.ShooterFeederCommandReverse;
 
 public class RobotContainer {
     private double MaxSpeed = 0.4 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -46,7 +49,11 @@ public class RobotContainer {
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
             .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
-    private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+    private final SwerveRequest.RobotCentric robotCentricDrive = new SwerveRequest.RobotCentric().
+        withDeadband(MaxSpeed *0.1).withRotationalDeadband(MaxAngularRate * 0.1). withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+    
+    
+        private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
@@ -65,7 +72,9 @@ public class RobotContainer {
     public final Indexerx44 indexer = new Indexerx44();
     //public final IndexerNeo indexer = new IndexerNeo();
     //Command 
-    public final ShooterFeederCommand shooterFeederCommand = new ShooterFeederCommand(feederSubsystem, shooterSubsystem, indexer, 60);
+    public final ShooterFeederCommand shooterFeederCommand = new ShooterFeederCommand(feederSubsystem, shooterSubsystem, indexer, 75);
+    public final ShooterFeederCommand shooterFeederCommandReverse = new ShooterFeederCommand(feederSubsystem, shooterSubsystem, indexer, 30);
+
     //public final ShooterFeederCommand shooterFeederCmd = new ShooterFeederCommand(feederSubsystem, shooterSubsystem, feederMotor);
     public final Intake intake = new Intake();
     //public final Shooter shooter = new Shooter()
@@ -76,6 +85,15 @@ public class RobotContainer {
 
     public RobotContainer() {
 
+        //PathPlannerAuto autoCommand = new PathPlannerAuto("Test Auto");
+
+   
+        new EventTrigger("Shoot").whileTrue(shooterFeederCommand);
+        new EventTrigger("Shooter shoot only").whileTrue(Commands.run(() -> {shooterSubsystem.runAtVelocity(30);}));
+        new EventTrigger("Stop Shooter").whileTrue(Commands.run(() -> {shooterSubsystem.runAtVelocity(0);}));
+        new EventTrigger("Hinge down").whileTrue(Commands.run(() -> {hinge.down(0);}));
+        new EventTrigger("intake").whileTrue(Commands.run(() -> {intake.intakeFuel(0.5);}));
+        
         //DEFAULT AUTO IS THE MIDDLE AUTO
         // boolean notMiddle = false; //to change auto change these two booleans
         // boolean notRight = false;
@@ -133,11 +151,15 @@ public class RobotContainer {
 
         //operatorJoystick.a().whileFalse(Commands.run(() -> {feederSubsystem.stop(); shooterSubsystem.stop(); indexer.stop();}));
 
-         operatorJoystick.rightBumper().whileTrue(Commands.run(() -> {indexer.runAtVelocity(-30);}));
+         operatorJoystick.rightBumper().whileTrue(Commands.run(() -> {indexer.runAtVelocity(-35);})); //-30
          operatorJoystick.rightBumper().whileFalse(Commands.run(() -> {indexer.runAtVelocity(0);}));
-         operatorJoystick.leftBumper().whileTrue(Commands.run(() -> {shooterSubsystem.runAtVelocity(65);}));
-         operatorJoystick.leftTrigger().whileTrue(Commands.run(() -> {feederSubsystem.runAtVelocity(45);}));
+         operatorJoystick.leftBumper().whileTrue(Commands.run(() -> {shooterSubsystem.runAtVelocity(75);}));
+         operatorJoystick.leftBumper().whileFalse(Commands.run(() -> {shooterSubsystem.runAtVelocity(0);}));
+         operatorJoystick.leftTrigger().whileTrue(Commands.run(() -> {feederSubsystem.runAtVelocity(65);})); //45
          operatorJoystick.leftTrigger().whileFalse((Commands.run(() -> {feederSubsystem.runAtVelocity(0);})));
+         operatorJoystick.rightTrigger().whileTrue(Commands.run(() -> {indexer.runAtVelocity(35);})); //45
+         operatorJoystick.rightTrigger().whileFalse((Commands.run(() -> {indexer.runAtVelocity(0);})));
+         operatorJoystick.y().whileTrue(shooterFeederCommandReverse);
          //operatorJoystick.leftBumper().whileFalse(Commands.run(() -> {shooterSubsystem.runAtVelocity(0);}));
         // }));
         //operatorJoystick.rightTrigger.whileTrueCommands.run(() -> {
@@ -219,15 +241,20 @@ public class RobotContainer {
 
         //COMMENTED FOR SYSID
         driveJoystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
-
+        // driveJoystick.rightBumper().onTrue(() -> {drivetrain.applyRequest(drivetrain.applyRequest(() -> robotCentricDrive.withVelocityX(-driveJoystick.getLeftY() * MaxSpeed) // Drive forward
+        //                                                                                                 // with negative
+        //                                                                                                 // Y (forward)
+        //                .withVelocityY(-driveJoystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+        //                 .withRotationalRate(-driveJoystick.getRightX() * MaxAngularRate) // Drive counterclockwise with
+        //                                                                                  // negative X (left)
+        //        )});
         drivetrain.registerTelemetry(logger::telemeterize);
     }
 
     public Command getAutonomousCommand() {
-
-
-        //return Commands.print("No autonomous command configured");
-        return new PathPlannerAuto("Right Shooting");
-        //return autoChooser.getSelected(); //will select the default which is Center start - middle shooter
+        //return new PathPlannerAuto("Right Shooting");
+        return new PathPlannerAuto("Right Shooting Nuetral Zone");
+        //return new PathPlannerAuto("Middle Shooting");
+        //return new PathPlannerAuto("Test Auto");
     }
 }

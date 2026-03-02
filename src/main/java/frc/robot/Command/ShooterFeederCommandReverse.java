@@ -6,16 +6,16 @@ import frc.robot.subsystems.FeederSubystem;
 import frc.robot.subsystems.Indexerx44;
 import frc.robot.subsystems.Shooter;
 
-public class ShooterFeederCommand extends Command{
+public class ShooterFeederCommandReverse extends Command{
 
     private final FeederSubystem feedersubystem;
     private final Shooter shooterSubsystem;
     private final Indexerx44 indexerSubsytem;
-    private double targetShooterRPS = 65;
+    private double targetShooterRPS = 75;
     private final double tolerance = 1;
 
 
-    public ShooterFeederCommand( FeederSubystem feederSubystem, Shooter shooterSubsystem, Indexerx44 indexersubsystem, double targetShooterRPS ){
+    public ShooterFeederCommandReverse( FeederSubystem feederSubystem, Shooter shooterSubsystem, Indexerx44 indexersubsystem, double targetShooterRPS ){
         this.shooterSubsystem = shooterSubsystem;
         this.feedersubystem = feederSubystem;
         this.indexerSubsytem = indexersubsystem;
@@ -34,9 +34,9 @@ public class ShooterFeederCommand extends Command{
     @Override
     public void execute(){
         shooterSubsystem.runAtVelocity(targetShooterRPS);
-         if(shooterSubsystem.atTargetRps(targetShooterRPS, tolerance)){
-                feedersubystem.runAtVelocity(65);
-                indexerSubsytem.runAtVelocity(-40);
+         if(shooterSubsystem.atTargetRps(-targetShooterRPS, tolerance)){
+                feedersubystem.runAtVelocity(-65);
+                indexerSubsytem.runAtVelocity(40);
          }//method in shooter which returns a boolean val when shooter has reached target velocity
         
     }

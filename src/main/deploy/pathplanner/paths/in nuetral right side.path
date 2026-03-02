@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.9643655723158826,
-        "y": 7.604250221827861
+        "x": 8.302626488095237,
+        "y": 0.9289583333333338
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.2754192411372056,
-        "y": 7.412996587207652
+        "x": 8.350479148181012,
+        "y": 0.6106122448979578
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "move to middle right side"
     },
     {
       "anchor": {
-        "x": 1.275,
-        "y": 6.136145833333334
+        "x": 8.302626488095237,
+        "y": 3.75734693877551
       },
       "prevControl": {
-        "x": 2.76264880952381,
-        "y": 6.860453869047619
+        "x": 8.294143744454303,
+        "y": 4.216078083407275
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "move to middle start"
+      "linkedName": "right side move to shoot"
     }
   ],
   "rotationTargets": [],
@@ -33,15 +33,9 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Hinge down",
-      "waypointRelativePos": 0.0,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "Shoot",
-      "waypointRelativePos": 1,
-      "endWaypointRelativePos": null,
+      "name": "intake",
+      "waypointRelativePos": 4.90059381963448e-17,
+      "endWaypointRelativePos": 1.0,
       "command": null
     }
   ],
@@ -55,13 +49,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -35.736093262580944
+    "rotation": 91.61353893288116
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 87.85241457170135
   },
   "useDefaultConstraints": true
 }
