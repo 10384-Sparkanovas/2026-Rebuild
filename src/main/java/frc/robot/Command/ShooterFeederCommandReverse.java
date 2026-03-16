@@ -11,7 +11,7 @@ public class ShooterFeederCommandReverse extends Command{
     private final FeederSubystem feedersubystem;
     private final Shooter shooterSubsystem;
     private final Indexerx44 indexerSubsytem;
-    private double targetShooterRPS = 75;
+    private double targetShooterRPS = -55;
     private final double tolerance = 1;
 
 

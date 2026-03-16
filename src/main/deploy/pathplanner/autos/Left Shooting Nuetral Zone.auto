@@ -11,15 +11,39 @@
           }
         },
         {
-          "type": "named",
+          "type": "wait",
           "data": {
-            "name": "shoot"
+            "waitTime": 5.0
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "move to middle left side"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "in neutral left"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 3.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "shoot left"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
           }
         }
       ]

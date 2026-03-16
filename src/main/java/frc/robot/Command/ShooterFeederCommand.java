@@ -11,7 +11,7 @@ public class ShooterFeederCommand extends Command{
     private final FeederSubystem feedersubystem;
     private final Shooter shooterSubsystem;
     private final Indexerx44 indexerSubsytem;
-    private double targetShooterRPS = 65;
+    private double targetShooterRPS = 55;
     private final double tolerance = 1;
 
 
@@ -35,8 +35,8 @@ public class ShooterFeederCommand extends Command{
     public void execute(){
         shooterSubsystem.runAtVelocity(targetShooterRPS);
          if(shooterSubsystem.atTargetRps(targetShooterRPS, tolerance)){
-                feedersubystem.runAtVelocity(65);
-                indexerSubsytem.runAtVelocity(-40);
+                feedersubystem.runAtVelocity(55);
+                indexerSubsytem.runAtVelocity(-35);
          }//method in shooter which returns a boolean val when shooter has reached target velocity
         
     }

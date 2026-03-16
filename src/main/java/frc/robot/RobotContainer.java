@@ -41,7 +41,7 @@ import frc.robot.subsystems.Indexerx44;
 import frc.robot.Command.ShooterFeederCommandReverse;
 
 public class RobotContainer {
-    private double MaxSpeed = 0.4 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+    private double MaxSpeed = 0.6 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
     // private final SendableChooser<Command> autoChooser;
@@ -72,7 +72,7 @@ public class RobotContainer {
     public final Indexerx44 indexer = new Indexerx44();
     //public final IndexerNeo indexer = new IndexerNeo();
     //Command 
-    public final ShooterFeederCommand shooterFeederCommand = new ShooterFeederCommand(feederSubsystem, shooterSubsystem, indexer, 75);
+    public final ShooterFeederCommand shooterFeederCommand = new ShooterFeederCommand(feederSubsystem, shooterSubsystem, indexer, 55);
     public final ShooterFeederCommand shooterFeederCommandReverse = new ShooterFeederCommand(feederSubsystem, shooterSubsystem, indexer, 30);
 
     //public final ShooterFeederCommand shooterFeederCmd = new ShooterFeederCommand(feederSubsystem, shooterSubsystem, feederMotor);
@@ -123,10 +123,10 @@ public class RobotContainer {
 
         //Intake bindings
         operatorJoystick.b().whileTrue(Commands.run(() -> {
-            intake.intakeFuel(0.5);
+            intake.intakeFuel(0.6);//0.6
         }, intake));
         operatorJoystick.x().whileTrue(Commands.run(() -> {
-            intake.exhaustFuel(-0.25);
+            intake.exhaustFuel(-0.25);//0.25
         }, intake));
         operatorJoystick.b().whileFalse(Commands.run(() -> {
             intake.stopMotor(0);
@@ -151,15 +151,15 @@ public class RobotContainer {
 
         //operatorJoystick.a().whileFalse(Commands.run(() -> {feederSubsystem.stop(); shooterSubsystem.stop(); indexer.stop();}));
 
-         operatorJoystick.rightBumper().whileTrue(Commands.run(() -> {indexer.runAtVelocity(-35);})); //-30
+         operatorJoystick.rightBumper().whileTrue(Commands.run(() -> {indexer.runAtVelocity(-35);})); //-35
          operatorJoystick.rightBumper().whileFalse(Commands.run(() -> {indexer.runAtVelocity(0);}));
-         operatorJoystick.leftBumper().whileTrue(Commands.run(() -> {shooterSubsystem.runAtVelocity(75);}));
+         operatorJoystick.leftBumper().whileTrue(Commands.run(() -> {shooterSubsystem.runAtVelocity(55);}));//55
          operatorJoystick.leftBumper().whileFalse(Commands.run(() -> {shooterSubsystem.runAtVelocity(0);}));
-         operatorJoystick.leftTrigger().whileTrue(Commands.run(() -> {feederSubsystem.runAtVelocity(65);})); //45
+         operatorJoystick.leftTrigger().whileTrue(Commands.run(() -> {feederSubsystem.runAtVelocity(55);})); //55
          operatorJoystick.leftTrigger().whileFalse((Commands.run(() -> {feederSubsystem.runAtVelocity(0);})));
-         operatorJoystick.rightTrigger().whileTrue(Commands.run(() -> {indexer.runAtVelocity(35);})); //45
+         operatorJoystick.rightTrigger().whileTrue(Commands.run(() -> {indexer.runAtVelocity(45);})); //35
          operatorJoystick.rightTrigger().whileFalse((Commands.run(() -> {indexer.runAtVelocity(0);})));
-         operatorJoystick.y().whileTrue(shooterFeederCommandReverse);
+         //operatorJoystick.y().whileTrue(shooterFeederCommandReverse);
          //operatorJoystick.leftBumper().whileFalse(Commands.run(() -> {shooterSubsystem.runAtVelocity(0);}));
         // }));
         //operatorJoystick.rightTrigger.whileTrueCommands.run(() -> {
@@ -203,6 +203,7 @@ public class RobotContainer {
                         .withRotationalRate(-driveJoystick.getRightX() * MaxAngularRate) // Drive counterclockwise with
                                                                                          // negative X (left)
                ));
+        
 
         // Idle while the robot is disabled. This ensures the configured
         // neutral mode is applied to the drive motors while disabled.
@@ -215,6 +216,7 @@ public class RobotContainer {
         // driveJoystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
         driveJoystick.b().whileTrue(drivetrain.applyRequest(
                 () -> point.withModuleDirection(new Rotation2d(driveJoystick.getLeftY(), driveJoystick.getLeftX())) ));
+        //driveJoystick.a().whileTrue(drivetrain.moveToPosition());
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
@@ -222,6 +224,16 @@ public class RobotContainer {
         driveJoystick.back().and(driveJoystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
         driveJoystick.start().and(driveJoystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         driveJoystick.start().and(driveJoystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+
+        // driveJoystick.a().whileTrue(Commands.run(() -> {shooterSubsystem.runAtVelocity(35);}));
+        // driveJoystick.b().whileTrue(Commands.run(() -> {shooterSubsystem.runAtVelocity(45);}));
+        // driveJoystick.x().whileTrue(Commands.run(() -> {shooterSubsystem.runAtVelocity(55);}));
+        // driveJoystick.y().whileTrue(Commands.run(() -> {shooterSubsystem.runAtVelocity(65);}));
+        // driveJoystick.a().whileFalse(Commands.run(() -> {shooterSubsystem.runAtVelocity(0);}));
+        // driveJoystick.b().whileFalse(Commands.run(() -> {shooterSubsystem.runAtVelocity(0);}));
+        // driveJoystick.x().whileFalse(Commands.run(() -> {shooterSubsystem.runAtVelocity(0);}));
+        // driveJoystick.y().whileFalse(Commands.run(() -> {shooterSubsystem.runAtVelocity(0);}));
+
 
         //Shooter SysId routines
         // driveJoystick.start().and(driveJoystick.a()).whileTrue(shooterSubsystem.sysIdQuasistatic(Direction.kForward));
@@ -252,9 +264,9 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        //return new PathPlannerAuto("Right Shooting");
-        return new PathPlannerAuto("Right Shooting Nuetral Zone");
+        return new PathPlannerAuto("Right Shooting");
+        //return new PathPlannerAuto("Right Shooting Nuetral Zone");
+        //return new PathPlannerAuto("Left Shooting Neutral Zone");
         //return new PathPlannerAuto("Middle Shooting");
-        //return new PathPlannerAuto("Test Auto");
     }
 }
