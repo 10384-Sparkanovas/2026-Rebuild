@@ -35,10 +35,11 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.FeederSubystem;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.LeftShooter;
 import frc.robot.subsystems.HingeMotor;
-import frc.robot.subsystems.Indexerx44;
+import frc.robot.subsystems.RightShooter;
 import frc.robot.Command.ShooterFeederCommandReverse;
+import frc.robot.Command.ShooterCommand;
 
 public class RobotContainer {
     private double MaxSpeed = 0.6 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -61,19 +62,21 @@ public class RobotContainer {
     private final CommandXboxController driveJoystick = new CommandXboxController(Constants.nonDriverConstants.driverID);
     private final CommandXboxController operatorJoystick = new CommandXboxController(Constants.nonDriverConstants.operatorID);
 
-    //Object declerations
-    //private  SparkFlex intakeMotor = new SparkFlex(Constants.nonDriverConstants.intakeID, com.revrobotics.spark.SparkLowLevel.MotorType.kBrushless);
+   
+    
 
     
     // Subsystems
      public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-    public final Shooter shooterSubsystem = new Shooter();
+    public final LeftShooter LeftShooterSubsystem = new LeftShooter();
+    public final RightShooter RightShooterSubsystem = new RightShooter();
     public final FeederSubystem feederSubsystem = new FeederSubystem();
-    public final Indexerx44 indexer = new Indexerx44();
-    //public final IndexerNeo indexer = new IndexerNeo();
+   
+    
     //Command 
-    public final ShooterFeederCommand shooterFeederCommand = new ShooterFeederCommand(feederSubsystem, shooterSubsystem, indexer, 55);
-    public final ShooterFeederCommand shooterFeederCommandReverse = new ShooterFeederCommand(feederSubsystem, shooterSubsystem, indexer, 30);
+    public final ShooterFeederCommand shooterFeederCommand = new ShooterFeederCommand(feederSubsystem, LeftShooterSubsystem, RightShooterSubsystem, 50);
+    public final ShooterFeederCommand shooterFeederCommandReverse = new ShooterFeederCommand(feederSubsystem, LeftShooterSubsystem, RightShooterSubsystem, 50);
+    public final ShooterCommand ShooterCommand = new ShooterCommand(LeftShooterSubsystem, RightShooterSubsystem, 20);
 
     //public final ShooterFeederCommand shooterFeederCmd = new ShooterFeederCommand(feederSubsystem, shooterSubsystem, feederMotor);
     public final Intake intake = new Intake();
@@ -89,8 +92,8 @@ public class RobotContainer {
 
    
         new EventTrigger("Shoot").whileTrue(shooterFeederCommand);
-        new EventTrigger("Shooter shoot only").whileTrue(Commands.run(() -> {shooterSubsystem.runAtVelocity(30);}));
-        new EventTrigger("Stop Shooter").whileTrue(Commands.run(() -> {shooterSubsystem.runAtVelocity(0);}));
+        new EventTrigger("Shooter shoot only").whileTrue(ShooterCommand);
+        new EventTrigger("Stop Shooter").whileTrue(Commands.run(() -> {LeftShooterSubsystem.runAtVelocity(0); RightShooterSubsystem.runAtVelocity(0);}));
         new EventTrigger("Hinge down").whileTrue(Commands.run(() -> {hinge.down(0);}));
         new EventTrigger("intake").whileTrue(Commands.run(() -> {intake.intakeFuel(0.5);}));
         
@@ -123,10 +126,10 @@ public class RobotContainer {
 
         //Intake bindings
         operatorJoystick.b().whileTrue(Commands.run(() -> {
-            intake.intakeFuel(0.6);//0.6
+            intake.intakeFuel(0.25);//0.6
         }, intake));
         operatorJoystick.x().whileTrue(Commands.run(() -> {
-            intake.exhaustFuel(-0.25);//0.25
+            intake.exhaustFuel(0.3);//0.25
         }, intake));
         operatorJoystick.b().whileFalse(Commands.run(() -> {
             intake.stopMotor(0);
@@ -134,6 +137,7 @@ public class RobotContainer {
         operatorJoystick.x().whileFalse(Commands.run(() -> {
             intake.stopMotor(0);
         }, intake));
+
    
         
         //Shooter bindings
@@ -144,21 +148,20 @@ public class RobotContainer {
         //operatorJoystick.y().whileTrue(Commands.run(() -> {shooterSubsystem.runAtVelocity(-30); feederSubsystem.runAtVelocity(-30); indexer.runAtVelocity(30); }));
         //operatorJoystick.y().whileFalse(Commands.run(() -> {shooterSubsystem.runAtVelocity(0); feederSubsystem.runAtVelocity(0); indexer.runAtVelocity(0); }));
         operatorJoystick.a().whileTrue(shooterFeederCommand);
-
+        operatorJoystick.y().whileTrue(Commands.run(() -> {RightShooterSubsystem.runAtVelocity(-50);}));
+        operatorJoystick.y().whileFalse(Commands.run(() -> {RightShooterSubsystem.runAtVelocity(0);}));
     
        
         //operatorJoystick.a().whileTrue(Commands.run(() -> {shooterSubsystem.runAtVelocity(65); feederSubsystem.runAtVelocity(30);}));
 
         //operatorJoystick.a().whileFalse(Commands.run(() -> {feederSubsystem.stop(); shooterSubsystem.stop(); indexer.stop();}));
 
-         operatorJoystick.rightBumper().whileTrue(Commands.run(() -> {indexer.runAtVelocity(-35);})); //-35
-         operatorJoystick.rightBumper().whileFalse(Commands.run(() -> {indexer.runAtVelocity(0);}));
-         operatorJoystick.leftBumper().whileTrue(Commands.run(() -> {shooterSubsystem.runAtVelocity(55);}));//55
-         operatorJoystick.leftBumper().whileFalse(Commands.run(() -> {shooterSubsystem.runAtVelocity(0);}));
-         operatorJoystick.leftTrigger().whileTrue(Commands.run(() -> {feederSubsystem.runAtVelocity(55);})); //55
+         
+         operatorJoystick.leftBumper().whileTrue(ShooterCommand);
+         operatorJoystick.leftBumper().whileFalse(Commands.run(() -> {LeftShooterSubsystem.runAtVelocity(0); RightShooterSubsystem.runAtVelocity(0);}));
+         operatorJoystick.leftTrigger().whileTrue(Commands.run(() -> {feederSubsystem.runAtVelocity(45);})); //55
          operatorJoystick.leftTrigger().whileFalse((Commands.run(() -> {feederSubsystem.runAtVelocity(0);})));
-         operatorJoystick.rightTrigger().whileTrue(Commands.run(() -> {indexer.runAtVelocity(45);})); //35
-         operatorJoystick.rightTrigger().whileFalse((Commands.run(() -> {indexer.runAtVelocity(0);})));
+         
          //operatorJoystick.y().whileTrue(shooterFeederCommandReverse);
          //operatorJoystick.leftBumper().whileFalse(Commands.run(() -> {shooterSubsystem.runAtVelocity(0);}));
         // }));
@@ -220,10 +223,10 @@ public class RobotContainer {
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
-        driveJoystick.back().and(driveJoystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        driveJoystick.back().and(driveJoystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-        driveJoystick.start().and(driveJoystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-        driveJoystick.start().and(driveJoystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+        // driveJoystick.back().and(driveJoystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+        // driveJoystick.back().and(driveJoystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+        // driveJoystick.start().and(driveJoystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+        // driveJoystick.start().and(driveJoystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
         // driveJoystick.a().whileTrue(Commands.run(() -> {shooterSubsystem.runAtVelocity(35);}));
         // driveJoystick.b().whileTrue(Commands.run(() -> {shooterSubsystem.runAtVelocity(45);}));
@@ -236,10 +239,10 @@ public class RobotContainer {
 
 
         //Shooter SysId routines
-        // driveJoystick.start().and(driveJoystick.a()).whileTrue(shooterSubsystem.sysIdQuasistatic(Direction.kForward));
-        // driveJoystick.start().and(driveJoystick.b()).whileTrue(shooterSubsystem.sysIdQuasistatic(Direction.kReverse));
-        // driveJoystick.start().and(driveJoystick.x()).whileTrue(shooterSubsystem.sysIDDynamic(Direction.kForward));
-        // driveJoystick.start().and(driveJoystick.y()).whileTrue(shooterSubsystem.sysIDDynamic(Direction.kReverse));
+        driveJoystick.start().and(driveJoystick.a()).whileTrue(LeftShooterSubsystem.sysIdQuasistatic(Direction.kForward));
+        driveJoystick.start().and(driveJoystick.b()).whileTrue(LeftShooterSubsystem.sysIdQuasistatic(Direction.kReverse));
+        driveJoystick.start().and(driveJoystick.x()).whileTrue(LeftShooterSubsystem.sysIDDynamic(Direction.kForward));
+        driveJoystick.start().and(driveJoystick.y()).whileTrue(LeftShooterSubsystem.sysIDDynamic(Direction.kReverse));
 
         //feeder SysId routines
         // driveJoystick.back().and(driveJoystick.povUp().whileTrue(feederSubsystem.sysIdQuasistatic(Direction.kForward)));

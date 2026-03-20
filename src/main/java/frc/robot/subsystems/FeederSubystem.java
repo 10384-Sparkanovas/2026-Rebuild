@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.generated.Constants;
 import frc.robot.generated.Constants.feederConstants;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.LeftShooter;
 
 
 public class FeederSubystem extends SubsystemBase{
@@ -24,7 +24,7 @@ public class FeederSubystem extends SubsystemBase{
     private final VelocityVoltage request = new VelocityVoltage(0).withSlot(0);
     private final VoltageOut voltageOut = new VoltageOut(2.0);
     public final VoltageOut sysIDOut = new VoltageOut(0);
-    public final Shooter shooterSubsystem = new Shooter();
+    public final LeftShooter LeftShooterSubsystem = new LeftShooter();
 
     public FeederSubystem(){
         //this.feederMotor = feederMotor;

@@ -19,12 +19,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 // Import the Constants class
-import frc.robot.generated.Constants.ShooterConstants;
+import frc.robot.generated.Constants.LeftShooterConstants;
 import frc.robot.generated.Constants;
 
-public class Shooter extends SubsystemBase {
+public class LeftShooter extends SubsystemBase {
        
-    private final TalonFX shooterMotor = new TalonFX(Constants.ShooterConstants.shooterID, Constants.nonDriverConstants.canivore);
+    private final TalonFX LeftShooter = new TalonFX(Constants.LeftShooterConstants.LeftShooterID, Constants.nonDriverConstants.canivore);
     // Create request once to save memory
     private final VelocityVoltage request = new VelocityVoltage(0).withSlot(0);
    
@@ -35,39 +35,39 @@ public class Shooter extends SubsystemBase {
     private final SysIdRoutine sysIdRoutine;
    
 
-    public Shooter() {
+    public LeftShooter() {
         //this.shooterMotor = shooterMotor;
        
         TalonFXConfiguration config = new TalonFXConfiguration();
         // Tuning for Velocity
-        config.Slot0.kS = ShooterConstants.kS;
-        config.Slot0.kV = ShooterConstants.kV;
-        config.Slot0.kP = ShooterConstants.kP;
-        config.Slot0.kI = ShooterConstants.kI;
-        config.Slot0.kD = ShooterConstants.kD;
-        config.Slot0.kA = ShooterConstants.kA;
+        config.Slot0.kS = LeftShooterConstants.kS;
+        config.Slot0.kV = LeftShooterConstants.kV;
+        config.Slot0.kP = LeftShooterConstants.kP;
+        config.Slot0.kI = LeftShooterConstants.kI;
+        config.Slot0.kD = LeftShooterConstants.kD;
+        config.Slot0.kA = LeftShooterConstants.kA;
         // Optional: If you want to put current limit in constants too
         // config.CurrentLimits.StatorCurrentLimit = ShooterConstants.kCurrentLimit;
         config.CurrentLimits.StatorCurrentLimit = 80;
         config.CurrentLimits.StatorCurrentLimitEnable = true;
         config.MotorOutput.NeutralMode = NeutralModeValue.Brake; // Coast?
-        shooterMotor.getConfigurator().apply(config);
+        LeftShooter.getConfigurator().apply(config);
 
         sysIdRoutine = new SysIdRoutine(
             new SysIdRoutine.Config(
                 Volts.of(0.5).per(Second), //Quasistatic 1V per second
-                Volts.of(4),         //0 - 7V Dynamic test   
+                Volts.of(5),         //0 - 7V Dynamic test   
                 Seconds.of(10)    //Max 10 seconds for either test      
             ),
             new SysIdRoutine.Mechanism(
                 (Voltage volts) -> {
-                    shooterMotor.setControl(sysIdControl.withOutput(volts.in(Volts)));
+                    LeftShooter.setControl(sysIdControl.withOutput(volts.in(Volts)));
                 },
                 (SysIdRoutineLog log) -> {
-                    log.motor("Indexer-Motor")
-                    .voltage(Volts.of(shooterMotor.getMotorVoltage().getValueAsDouble()))
-                    .angularPosition(Rotations.of(shooterMotor.getPosition().getValueAsDouble()))
-                    .angularVelocity(RotationsPerSecond.of(shooterMotor.getVelocity().getValueAsDouble()));
+                    log.motor("RightShooter")
+                    .voltage(Volts.of(LeftShooter.getMotorVoltage().getValueAsDouble()))
+                    .angularPosition(Rotations.of(LeftShooter.getPosition().getValueAsDouble()))
+                    .angularVelocity(RotationsPerSecond.of(LeftShooter.getVelocity().getValueAsDouble()));
                 },
                 this
             )
@@ -75,13 +75,13 @@ public class Shooter extends SubsystemBase {
     }  
 
     public void runAtVelocity(double rps) {
-        shooterMotor.setControl(request.withVelocity(rps)); //rps in this case would be the target
+        LeftShooter.setControl(request.withVelocity(rps)); //rps in this case would be the target
     }
     public void stop() {
-        shooterMotor.set(0);
+        LeftShooter.set(0);
     }
     public boolean atTargetRps(double targetRPS, double tolerance){
-        return Math.abs(shooterMotor.getVelocity().getValueAsDouble() - targetRPS) < tolerance;
+        return Math.abs(LeftShooter.getVelocity().getValueAsDouble() - targetRPS) < tolerance;
     }
    
     public Command sysIdQuasistatic(SysIdRoutine.Direction direction){

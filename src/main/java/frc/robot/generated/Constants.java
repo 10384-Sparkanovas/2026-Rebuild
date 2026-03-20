@@ -33,8 +33,8 @@ public class Constants {
         
 
     }
-    public static final class ShooterConstants{
-        public static final int shooterID = 42; //actually 42
+    public static final class LeftShooterConstants{
+        public static final int LeftShooterID = 43; //43
         public static final double kS = 0.078212;
         public static final double kA = 0.01326; //0.01226
         public static final double kV = 0.11639;
@@ -42,9 +42,19 @@ public class Constants {
         public static final double kI = 0;
         public static final double kD = 0.0;
     }
+    public static final class RightShooterConstants{
+        public static final int RightShooterID = 45; //45
+        public static final double kS = 0;
+        public static final double kA = 0; 
+        public static final double kV = 0.12;
+        public static final double kP = 0;
+        public static final double kI = 0;
+        public static final double kD = 0;
+        
+    }
 
     public static final class feederConstants{
-        public static final int feederID = 43; //actually 43
+        public static final int feederID = 42; //actually 42
         public static final double kS = 0.073278;
         public static final double kV = 0.11498;
         public static final double kA = 0.0017407;
@@ -53,19 +63,8 @@ public class Constants {
         public static final double kD = 0;
     }
 
-    public static final class indexerConstants {
-    public static final int indexMotorID = 44; //actually 44
-    public static final double kGearRatio = 1.0;
-    // Tuning for Kraken X44
-    public static final double kS = 1.0894;
-    public static final double kA = 0.057304;
-    public static final double kV = 0.094908;
-    public static final double kP = 0.10564;
-    public static final double kI = 0.0;
-    public static final double kD = 0.0;
- 
-}
-public static final class ClimbConstants{
+    
+    public static final class ClimbConstants{
         public static final int ClimbID = 45;
         public static final double kS = 0;
         public static final double kA = 0.02;
@@ -76,5 +75,8 @@ public static final class ClimbConstants{
     
     }
 
+    public static final class limelightConstants{
+        public static final int [] validLimelightIDs = {9,10,25,26}; 
+    }
     
 }
