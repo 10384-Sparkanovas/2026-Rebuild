@@ -35,30 +35,30 @@ public class Constants {
     }
     public static final class LeftShooterConstants{
         public static final int LeftShooterID = 43; //43
-        public static final double kS = 0.078212;
-        public static final double kA = 0.01326; //0.01226
-        public static final double kV = 0.11639;
-        public static final double kP = 0.066857;
+        public static final double kS = 0.078486;
+        public static final double kA = 0.0051861; 
+        public static final double kV = 0.1124;
+        public static final double kP = 0.03334;
         public static final double kI = 0;
-        public static final double kD = 0.0;
+        public static final double kD = 0;
     }
     public static final class RightShooterConstants{
         public static final int RightShooterID = 45; //45
-        public static final double kS = 0;
-        public static final double kA = 0; 
-        public static final double kV = 0.12;
-        public static final double kP = 0;
+        public static final double kS = 0.062335;
+        public static final double kA = 0.0051544; 
+        public static final double kV = 0.11381;
+        public static final double kP = 0.032174;
         public static final double kI = 0;
         public static final double kD = 0;
         
     }
 
     public static final class feederConstants{
-        public static final int feederID = 42; //actually 42
-        public static final double kS = 0.073278;
-        public static final double kV = 0.11498;
-        public static final double kA = 0.0017407;
-        public static final double kP = 0.0078322;
+        public static final int feederID = 42; //42
+        public static final double kS = 0.14641;
+        public static final double kV = 0.11249;
+        public static final double kA = 0.002665;
+        public static final double kP = 0.02013;
         public static final double kI = 0;
         public static final double kD = 0;
     }
