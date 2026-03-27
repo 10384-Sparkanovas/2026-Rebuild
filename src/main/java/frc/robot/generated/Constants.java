@@ -2,6 +2,8 @@ package frc.robot.generated;
 
 import com.ctre.phoenix6.CANBus;
 
+import edu.wpi.first.math.geometry.Translation2d;
+
 public class Constants {
     
     public static final class nonDriverConstants{
@@ -76,7 +78,8 @@ public class Constants {
     }
 
     public static final class limelightConstants{
-        public static final int [] validLimelightIDs = {9,10,25,26}; 
+        public static final int [] validLimelightIDs = {9,10,25,26};
+        public static final Translation2d hubPosition = new Translation2d(4.560824, 4.021328);
     }
-    
+
 }

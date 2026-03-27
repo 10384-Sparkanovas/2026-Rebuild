@@ -4,52 +4,40 @@
 
 package frc.robot;
 
-import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.hardware.Pigeon2;
+import static edu.wpi.first.units.Units.Degrees;
 
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.estimator.PoseEstimator;
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-// import frc.robot.subsystems.LimelightHelpers;
-import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.generated.Constants.limelightConstants;
 
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-  // private Pigeon2 m_gyro;
   
   private final RobotContainer m_robotContainer;
-  // private final PoseEstimator m_poseEstimator;
-  
 
   public Robot() {
     m_robotContainer = new RobotContainer();
-    // m_gyro = new Pigeon2(30);
-    // m_gyro.setYaw(0);
-    // m_poseEstimator = new PoseEstimator<>(null, null, null, null);
-    
-  
   }
 
   
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run(); 
-    // double yawDegrees = m_gyro.getYaw().getValueAsDouble();
-    // LimelightHelpers.SetRobotOrientation("novocane",yawDegrees,0,0,0,0,0);
-    // LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
-    // LimelightHelpers.SetRobotOrientation("novocane", m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
     
-  
-    // m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.5,.5,9999999));
-    // m_poseEstimator.addVisionMeasurement(
-    //     mt2.pose,
-    //     mt2.timestampSeconds);
-  
+    // LimelightHelpers.SetRobotOrientation("limelight-novas", m_robotContainer.drivetrain.getRotation3d().getMeasureZ().in(Degrees), 0, 0, 0, 0, 0);
+
+    // LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-novas");  
+    // m_robotContainer.drivetrain.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
+
+    // var combinedPosition = m_robotContainer.drivetrain.samplePoseAt(Timer.getFPGATimestamp());
+    // System.out.println(combinedPosition);
+    // if (combinedPosition.isPresent()){
+    //   var angleToHub = limelightConstants.hubPosition.minus(combinedPosition.get().getTranslation()).getAngle();
+    //   System.out.println(angleToHub);
+    // }
   }
 
   @Override
@@ -57,7 +45,7 @@ public class Robot extends TimedRobot {
 
   @Override 
   public void disabledPeriodic(){
-  //   LimelightHelpers.SetIMUMode("novocane", 1);
+    LimelightHelpers.SetIMUMode("limelight-novas", 1);
   }
 
   @Override
@@ -70,13 +58,13 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-    // LimelightHelpers.SetIMUAssistAlpha("novocane", 0.4);
+
+    LimelightHelpers.SetIMUMode("limelight-novas", 4);
   }
 
   @Override
   public void autonomousPeriodic() {
-    // LimelightHelpers.SetIMUMode("novocane", 4);
-  
+
   }
 
   @Override
@@ -87,12 +75,11 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    // LimelightHelpers.SetIMUAssistAlpha("novocane", 0.4);
+    LimelightHelpers.SetIMUMode("limelight-novas", 4);
   }
 
   @Override
   public void teleopPeriodic() {
-    // LimelightHelpers.SetIMUMode("novocane", 4);
   }
 
   @Override
