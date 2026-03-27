@@ -26,7 +26,7 @@ public class Constants {
         public static final double CruiseVelocity = 6; //RPS
         public static final double Acceleration = 12; // RPS/S may move up to 24
         public static final double Jerk = 0;
-        public static final double MaxCurrent = 40;
+        public static final double MaxCurrent = 60;
         public static final int leftHingeID = 19;
         public static final int rightHingeID = 18;
         public static final int encoderID = 20; 
