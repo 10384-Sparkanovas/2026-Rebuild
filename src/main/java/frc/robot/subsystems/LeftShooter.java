@@ -8,7 +8,7 @@ import static edu.wpi.first.units.Units.Second;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -26,7 +26,7 @@ public class LeftShooter extends SubsystemBase {
        
     private final TalonFX LeftShooter = new TalonFX(Constants.LeftShooterConstants.LeftShooterID, Constants.nonDriverConstants.canivore);
     // Create request once to save memory
-    private final VelocityVoltage request = new VelocityVoltage(0).withSlot(0);
+    private final MotionMagicVelocityVoltage request = new MotionMagicVelocityVoltage(0).withSlot(0).withAcceleration(14);
    
     // SysId Control Request (Voltage)
     // SysId requires direct voltage control, ignoring PID constants
