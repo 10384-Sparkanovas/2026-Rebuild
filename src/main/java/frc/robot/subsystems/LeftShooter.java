@@ -50,7 +50,7 @@ public class LeftShooter extends SubsystemBase {
         // config.CurrentLimits.StatorCurrentLimit = ShooterConstants.kCurrentLimit;
         config.CurrentLimits.StatorCurrentLimit = 80;
         config.CurrentLimits.StatorCurrentLimitEnable = true;
-        config.MotorOutput.NeutralMode = NeutralModeValue.Brake; // Coast?
+        config.MotorOutput.NeutralMode = NeutralModeValue.Coast; // Coast?
         LeftShooter.getConfigurator().apply(config);
 
         sysIdRoutine = new SysIdRoutine(

@@ -45,7 +45,7 @@ public class FeederSubystem extends SubsystemBase{
 
         config.CurrentLimits.StatorCurrentLimit = 80;
         config.CurrentLimits.StatorCurrentLimitEnable = true;
-        config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
         feederMotor.getConfigurator().apply(config);
 
     }
