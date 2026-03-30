@@ -11,6 +11,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -30,10 +31,12 @@ public class HingeMotor extends SubsystemBase{
         config.MotionMagic.MotionMagicAcceleration = Constants.HingeConstants.Acceleration;
         config.MotionMagic.MotionMagicCruiseVelocity = Constants.HingeConstants.CruiseVelocity;
         config.MotionMagic.MotionMagicJerk = Constants.HingeConstants.Jerk;
+        config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
         config.Slot0.kG = HingeConstants.KG;
         config.Slot0.kS = HingeConstants.KS;
         config.Slot0.kV = HingeConstants.KV;
         config.Slot0.kP = HingeConstants.KP;
+        config.Slot0.kI = HingeConstants.KI;
         config.Slot0.kD = HingeConstants.KD;
         config.Feedback.FeedbackRemoteSensorID = HingeConstants.encoderID;
         config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
