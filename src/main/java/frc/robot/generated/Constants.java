@@ -17,8 +17,8 @@ public class Constants {
     }
     public static final class HingeConstants{
         public static final double hingeMass = 0; //need to adjust 
-        public static final double KG = 0.734375; //need to increase with weight (estimate protoype weight at 3lb)
-        public static final double KS = 0.2; //need to increase with weight 
+        public static final double KG = 0.5; //need to increase with weight (estimate protoype weight at 3lb)
+        public static final double KS = 0; //need to increase with weight 
         public static final double KV = 0.6; //leave alone
         public static final double KP = 5.0; //when there is something attached, needs to be increased
         public static final double KI = 0;
