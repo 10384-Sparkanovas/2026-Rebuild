@@ -77,7 +77,8 @@ public class Constants {
 
     public static final class limelightConstants{
         public static final int [] validLimelightIDs = {9,10,25,26};
-        public static final Translation2d hubPosition = new Translation2d(4.560824, 4.021328);
+        public static final Translation2d blueHubPosition = new Translation2d(4.625594, 4.034536);
+        public static final Translation2d redHubPosition = new Translation2d(11.915394, 4.034536);
     }
 
 }

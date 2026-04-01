@@ -11,7 +11,7 @@ public class ShooterFeederCommand extends Command{
     private final FeederSubystem feedersubystem;
     private final LeftShooter LeftShooterSubsystem;
     private final RightShooter RightShooterSubsystem;
-    private double targetShooterRPS = 50;
+    private double targetShooterRPS = 60;
     private final double tolerance = 1;
 
 

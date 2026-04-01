@@ -9,7 +9,7 @@ public class ShooterCommand extends Command{
 
 private final LeftShooter LeftShooterSubsystem;
 private final RightShooter RightShooterSubsystem;
-private double targetShooterRPS = 50;
+private double targetShooterRPS = 60;
 
 
    public ShooterCommand(LeftShooter LeftShooterSubsystem, RightShooter RightShooterSubsystem, double targetShooterRPS){
