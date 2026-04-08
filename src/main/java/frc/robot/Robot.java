@@ -27,17 +27,22 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     CommandScheduler.getInstance().run(); 
     
-    LimelightHelpers.SetRobotOrientation("limelight-novas", m_robotContainer.drivetrain.getRotation3d().getMeasureZ().in(Degrees), 0, 0, 0, 0, 0);
+    // LimelightHelpers.SetRobotOrientation("limelight-novas", m_robotContainer.drivetrain.getRotation3d().getMeasureZ().in(Degrees), 0, 0, 0, 0, 0);
 
-    LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-novas");  
-    m_robotContainer.drivetrain.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
+    // LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-novas");  
+    // m_robotContainer.drivetrain.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
 
-    var combinedPosition = m_robotContainer.drivetrain.samplePoseAt(Timer.getFPGATimestamp());
-    System.out.println(combinedPosition);
-    if (combinedPosition.isPresent()){
-      var angleToHub = limelightConstants.blueHubPosition.minus(combinedPosition.get().getTranslation()).getAngle();
-      System.out.println(angleToHub);
-    }
+    // var combinedPosition = m_robotContainer.drivetrain.samplePoseAt(Timer.getFPGATimestamp());
+    // //System.out.println(combinedPosition);
+    // if (combinedPosition.isPresent()){
+    //   var robotToHub = limelightConstants.blueHubPosition.minus(combinedPosition.get().getTranslation());
+    //   var angleToHub = robotToHub.getAngle();
+    //   var distanceToHub = robotToHub.getNorm();
+    //   System.out.println("angle: " + angleToHub);
+    
+    //   System.out.println("distance: " + distanceToHub);
+    //   System.out.println();
+    // } 
   }
 
   @Override

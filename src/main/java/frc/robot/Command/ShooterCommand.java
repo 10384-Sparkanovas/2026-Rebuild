@@ -9,7 +9,7 @@ public class ShooterCommand extends Command{
 
 private final LeftShooter LeftShooterSubsystem;
 private final RightShooter RightShooterSubsystem;
-private double targetShooterRPS = 60;
+private double targetShooterRPS = 65;
 
 
    public ShooterCommand(LeftShooter LeftShooterSubsystem, RightShooter RightShooterSubsystem, double targetShooterRPS){
@@ -18,8 +18,6 @@ private double targetShooterRPS = 60;
         this.targetShooterRPS = targetShooterRPS;
 
         addRequirements(LeftShooterSubsystem, RightShooterSubsystem);
-
-
     }
 
     @Override
