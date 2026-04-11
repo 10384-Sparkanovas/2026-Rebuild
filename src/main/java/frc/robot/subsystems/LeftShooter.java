@@ -26,7 +26,7 @@ public class LeftShooter extends SubsystemBase {
        
     private final TalonFX LeftShooter = new TalonFX(Constants.LeftShooterConstants.LeftShooterID, Constants.nonDriverConstants.canivore);
     // Create request once to save memory
-    private final MotionMagicVelocityVoltage request = new MotionMagicVelocityVoltage(0).withSlot(0).withAcceleration(35);
+    private final MotionMagicVelocityVoltage request = new MotionMagicVelocityVoltage(0).withSlot(0).withAcceleration(100);
    
     // SysId Control Request (Voltage)
     // SysId requires direct voltage control, ignoring PID constants

@@ -42,7 +42,7 @@ import frc.robot.Command.ShooterFeederCommandReverse;
 import frc.robot.Command.ShooterCommand;
 
 public class RobotContainer {
-    private double MaxSpeed = 0.6 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+    private double MaxSpeed = 0.3 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
     // private final SendableChooser<Command> autoChooser;
@@ -74,9 +74,9 @@ public class RobotContainer {
    
     
     //Command 
-    public final ShooterFeederCommand shooterFeederCommand = new ShooterFeederCommand(feederSubsystem, LeftShooterSubsystem, RightShooterSubsystem, 50);
+    public final ShooterFeederCommand shooterFeederCommand = new ShooterFeederCommand(feederSubsystem, LeftShooterSubsystem, RightShooterSubsystem, 65);
     public final ShooterFeederCommand shooterFeederCommandReverse = new ShooterFeederCommand(feederSubsystem, LeftShooterSubsystem, RightShooterSubsystem, 50);
-    public final ShooterCommand ShooterCommand = new ShooterCommand(LeftShooterSubsystem, RightShooterSubsystem,65);
+    public final ShooterCommand ShooterCommand = new ShooterCommand(LeftShooterSubsystem, RightShooterSubsystem,70);
     public final ShooterCommand ShooterCommand2 = new ShooterCommand(LeftShooterSubsystem, RightShooterSubsystem, -70);
     public final ShooterCommand ShooterFeederCommand2 = new ShooterCommand(LeftShooterSubsystem, RightShooterSubsystem,75);
     public final ShooterCommand ShooterFeederCommand3 = new ShooterCommand(LeftShooterSubsystem, RightShooterSubsystem,70);
@@ -94,7 +94,7 @@ public class RobotContainer {
         //PathPlannerAuto autoCommand = new PathPlannerAuto("Test Auto");
 
    
-        new EventTrigger("Shoot").whileTrue(shooterFeederCommand);
+
         new EventTrigger("Shooter shoot only").whileTrue(ShooterCommand);
         new EventTrigger("Stop Shooter").whileTrue(Commands.run(() -> {LeftShooterSubsystem.runAtVelocity(0); RightShooterSubsystem.runAtVelocity(0);}));
         new EventTrigger("Hinge down").whileTrue(Commands.run(() -> {hinge.down(0);}));
@@ -156,7 +156,7 @@ public class RobotContainer {
         //operatorJoystick.a().whileFalse(Commands.run(() -> {shooterSubsystem.runAtVelocity(0); feederSubsystem.runAtVelocity(0); indexer.runAtVelocity(0); }));
         //operatorJoystick.y().whileTrue(Commands.run(() -> {shooterSubsystem.runAtVelocity(-30); feederSubsystem.runAtVelocity(-30); indexer.runAtVelocity(30); }));
         //operatorJoystick.y().whileFalse(Commands.run(() -> {shooterSubsystem.runAtVelocity(0); feederSubsystem.runAtVelocity(0); indexer.runAtVelocity(0); }));
-        // operatorJoystick.a().whileTrue(shooterFeederCommand);
+        operatorJoystick.y().whileTrue(shooterFeederCommand);
         // operatorJoystick.y().whileTrue(Commands.run(() -> {RightShooterSubsystem.runAtVelocity(-50);}));
         // operatorJoystick.y().whileFalse(Commands.run(() -> {RightShooterSubsystem.runAtVelocity(0);}));
     
@@ -167,16 +167,16 @@ public class RobotContainer {
 
          
         operatorJoystick.leftBumper().whileTrue(ShooterCommand);
-        operatorJoystick.leftBumper().whileFalse(Commands.run(() -> {LeftShooterSubsystem.runAtVelocity(0); RightShooterSubsystem.runAtVelocity(0);}));
+        // operatorJoystick.leftBumper().whileFalse(Commands.run(() -> {LeftShooterSubsystem.runAtVelocity(0); RightShooterSubsystem.runAtVelocity(0);}));
         operatorJoystick.rightBumper().whileTrue(ShooterCommand2);
-        operatorJoystick.rightBumper().whileFalse(Commands.run(() -> {LeftShooterSubsystem.runAtVelocity(0); RightShooterSubsystem.runAtVelocity(0);}));
-        operatorJoystick.rightTrigger().whileTrue(Commands.run(() -> {feederSubsystem.runAtVelocity(-50);})); //55
-        operatorJoystick.rightTrigger().whileFalse((Commands.run(() -> {feederSubsystem.runAtVelocity(0);})));
-        operatorJoystick.povRight().whileTrue(ShooterFeederCommand2);
-        operatorJoystick.povRight().whileFalse(Commands.run(() -> {feederSubsystem.stop(); LeftShooterSubsystem.stop(); RightShooterSubsystem.stop();}));
-        operatorJoystick.povLeft().whileTrue(ShooterFeederCommand3);
-        operatorJoystick.povLeft().whileFalse(Commands.run(() -> {feederSubsystem.stop(); LeftShooterSubsystem.stop(); RightShooterSubsystem.stop();}));
-        operatorJoystick.leftTrigger().and(() -> LeftShooterSubsystem.atTargetRps(65, 5)).whileTrue(Commands.run(() -> {feederSubsystem.runAtVelocity(50);})); //55
+        // operatorJoystick.rightBumper().whileFalse(Commands.run(() -> {LeftShooterSubsystem.runAtVelocity(0); RightShooterSubsystem.runAtVelocity(0);}));
+        //operatorJoystick.rightTrigger().whileTrue(Commands.run(() -> {feederSubsystem.runAtVelocity(-50);})); //55
+        // operatorJoystick.rightTrigger().whileFalse((Commands.run(() -> {feederSubsystem.runAtVelocity(0);})));
+        // operatorJoystick.povRight().whileTrue(ShooterFeederCommand2);
+        // operatorJoystick.povRight().whileFalse(Commands.run(() -> {feederSubsystem.stop(); LeftShooterSubsystem.stop(); RightShooterSubsystem.stop();}));
+        //operatorJoystick.povLeft().whileTrue(ShooterFeederCommand3);
+        // operatorJoystick.povLeft().whileFalse(Commands.run(() -> {feederSubsystem.stop(); LeftShooterSubsystem.stop(); RightShooterSubsystem.stop();}));
+        operatorJoystick.leftTrigger().and(() -> LeftShooterSubsystem.atTargetRps(70, 5)).whileTrue(Commands.run(() -> {feederSubsystem.runAtVelocity(50);})); //55
         operatorJoystick.leftTrigger().whileFalse((Commands.run(() -> {feederSubsystem.runAtVelocity(0);})));
         
      
@@ -195,7 +195,7 @@ public class RobotContainer {
 
         //Hinge bindings
         operatorJoystick.povDown().onTrue(Commands.run(() -> {
-            hinge.down(-0.01);
+            hinge.down(-0.05);
         }, hinge));
         operatorJoystick.povUp().onTrue(Commands.run(() -> {
             hinge.down(0.15);
