@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.041607142857143,
-        "y": 0.4721875
+        "x": 3.5065327380952382,
+        "y": 4.035
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.441279761904762,
-        "y": 0.43303571428571486
+        "x": 3.071047027506655,
+        "y": 4.03902395740905
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.275,
-        "y": 1.8751264880952387
+        "x": 1.764278273809524,
+        "y": 4.0
       },
       "prevControl": {
-        "x": 2.696920239268537,
-        "y": 1.1828073620162065
+        "x": 2.014278273809524,
+        "y": 4.0
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "start move to middle"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -34,13 +34,7 @@
   "eventMarkers": [
     {
       "name": "Hinge down",
-      "waypointRelativePos": 0.7046979865771841,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "Shoot",
-      "waypointRelativePos": 1,
+      "waypointRelativePos": 0.4278523489932877,
       "endWaypointRelativePos": null,
       "command": null
     }
@@ -55,7 +49,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 33.47627829610257
+    "rotation": -0.4129438476440954
   },
   "reversed": false,
   "folder": null,

@@ -42,7 +42,7 @@ import frc.robot.Command.ShooterFeederCommandReverse;
 import frc.robot.Command.ShooterCommand;
 
 public class RobotContainer {
-    private double MaxSpeed = 0.3 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+    private double MaxSpeed = 0.45 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
     // private final SendableChooser<Command> autoChooser;
@@ -81,6 +81,9 @@ public class RobotContainer {
     public final ShooterCommand ShooterFeederCommand2 = new ShooterCommand(LeftShooterSubsystem, RightShooterSubsystem,75);
     public final ShooterCommand ShooterFeederCommand3 = new ShooterCommand(LeftShooterSubsystem, RightShooterSubsystem,70);
 
+    public final ShooterFeederCommand shooterFeederAuto = new ShooterFeederCommand(feederSubsystem, LeftShooterSubsystem, RightShooterSubsystem, 65);
+    //public final targetrpsauto =
+
     //public final ShooterFeederCommand shooterFeederCmd = new ShooterFeederCommand(feederSubsystem, shooterSubsystem, feederMotor);
     public final Intake intake = new Intake();
     //public final Shooter shooter = new Shooter()
@@ -92,12 +95,15 @@ public class RobotContainer {
     public RobotContainer() {
 
         //PathPlannerAuto autoCommand = new PathPlannerAuto("Test Auto");
-
-   
-
-        new EventTrigger("Shooter shoot only").whileTrue(ShooterCommand);
-        new EventTrigger("Stop Shooter").whileTrue(Commands.run(() -> {LeftShooterSubsystem.runAtVelocity(0); RightShooterSubsystem.runAtVelocity(0);}));
+        NamedCommands.registerCommand("Shoot", new ShooterFeederCommand(feederSubsystem, LeftShooterSubsystem, RightShooterSubsystem, 65));
+        //NamedCommands.registerCommand("hingeUpAuto", Commands.run(() -> hinge.down(0.15))); //that means up
+        // NamedCommands.registerCommand("Shoot", shooterFeederAuto);
+        //NamedCommands.registerCommand("Stop Shoot", shooterFeederAuto(0));
+        new EventTrigger("shooterOnly").whileTrue(Commands.run(() -> {LeftShooterSubsystem.runAtVelocity(75); RightShooterSubsystem.runAtVelocity(75);}));
+        new EventTrigger("feeder").whileTrue(Commands.run(() -> {feederSubsystem.runAtVelocity(50);}));
+        //new EventTrigger("Stop shooterfeedersubsystem").whileTrue(Commands.run(() -> {LeftShooterSubsystem.runAtVelocity(0); RightShooterSubsystem.runAtVelocity(0);}));
         new EventTrigger("Hinge down").whileTrue(Commands.run(() -> {hinge.down(0);}));
+        new EventTrigger("Hinge Up").whileTrue(Commands.run(() -> {hinge.down(0.15);}));
         new EventTrigger("intake").whileTrue(Commands.run(() -> {intake.intakeFuel(0.5);}));
         
         //DEFAULT AUTO IS THE MIDDLE AUTO
@@ -220,6 +226,12 @@ public class RobotContainer {
                                                                                          // negative X (left)
                ));
         
+        driveJoystick.povDown().onTrue(Commands.run(() -> {
+            hinge.down(-0.05);
+        }, hinge));
+        driveJoystick.povUp().onTrue(Commands.run(() -> {
+            hinge.down(0.15);
+        }, hinge));
 
         // Idle while the robot is disabled. This ensures the configured
         // neutral mode is applied to the drive motors while disabled.
@@ -279,6 +291,6 @@ public class RobotContainer {
         //return new PathPlannerAuto("Right Shooting");
         //return new PathPlannerAuto("Right Shooting Nuetral Zone");
         //return new PathPlannerAuto("Left Shooting Neutral Zone");
-        return new PathPlannerAuto("Middle Shooting");
+        return new PathPlannerAuto("Copy of Middle Shooting");
     }
 }

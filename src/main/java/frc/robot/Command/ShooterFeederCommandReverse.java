@@ -35,7 +35,7 @@ public class ShooterFeederCommandReverse extends Command{
     public void execute(){
         LeftShooterSubsystem.runAtVelocity(targetShooterRPS);
         RightShooterSubsystem.runAtVelocity(targetShooterRPS);
-         if(LeftShooterSubsystem.atTargetRps(-targetShooterRPS, tolerance)){
+         if(LeftShooterSubsystem.atTargetRps(targetShooterRPS, tolerance)){
                 feedersubystem.runAtVelocity(-55);
          }//method in shooter which returns a boolean val when shooter has reached target velocity
         

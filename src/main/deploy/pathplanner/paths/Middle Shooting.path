@@ -8,7 +8,7 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.5065327380952365,
+        "x": 2.50653273809524,
         "y": 4.035
       },
       "isLocked": false,
@@ -20,7 +20,7 @@
         "y": 4.035
       },
       "prevControl": {
-        "x": 0.764278273809524,
+        "x": 2.764278273809524,
         "y": 4.035
       },
       "nextControl": null,
@@ -34,12 +34,12 @@
   "eventMarkers": [
     {
       "name": "Hinge down",
-      "waypointRelativePos": 0.49832214765100574,
+      "waypointRelativePos": 0.6526845637583906,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
-      "name": "Shoot",
+      "name": "Hinge Up",
       "waypointRelativePos": 1.0,
       "endWaypointRelativePos": null,
       "command": null
